@@ -6,6 +6,8 @@ from .extensions import db, ma
 
 from flask_sqlalchemy import SQLAlchemy
 
+db = SQLAlchemy()
+
 def create_app(test_config=None) -> Flask:
 
     app = Flask(__name__, instance_relative_config=True)
@@ -19,7 +21,7 @@ def create_app(test_config=None) -> Flask:
     else:
         app.config.from_mapping(test_config)
 
- 
+    db.init_app(app)
     from .api.cadastra_nf import cadastro_bp
     from .api.consulta_nf import consulta_bp
     from .api.jestor import jestor_bp
