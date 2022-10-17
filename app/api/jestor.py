@@ -4,8 +4,9 @@ import requests
 from ..controllers.controllers_pedidos import get_pedidos_flexy
 from typing import Dict, Tuple, List, Any
 from itertools import chain
-jestor_bp = Blueprint('jestor', __name__)
 
+
+jestor_bp = Blueprint('jestor', __name__)
 
 def get_metodo_nf(f):
     @wraps(f)
@@ -35,12 +36,13 @@ def get_metodo_nf(f):
 @get_metodo_nf
 def get_parametros_nfe(*args: Any, **kwargs: Dict[str, Any]) -> Any:
     """Parametros entrada notas venda"""
-    print('Called example function')
+    print('Called function --> NF')
     
         
 @get_metodo_nf
 def get_pedidos_itens_jestor(*args: Any, **kwargs: Dict[str, Any]) -> Any:
     """Parametros entrada pedidos itens"""
+    print('Called function --> pedidos itens')
     
 
 @jestor_bp.route('/api/v1/jestor/notapedido/nfpedido/all', methods=['GET','POST'])
