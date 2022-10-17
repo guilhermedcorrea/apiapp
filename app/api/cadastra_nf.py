@@ -38,4 +38,4 @@ def cadastra_notas() -> Response:
 def cancela_nota() -> Response:
     id_nf  = request.get_json()
  
-    return jsonify({"CANCEANF":id_nf}),201
+    return jsonify({"CANCELANF":id_nf}),201
