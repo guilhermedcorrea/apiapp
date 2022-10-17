@@ -31,15 +31,15 @@ class PedidosVendaHausz(HauszMapa):
                 yield 'notfound'
 
 
-    def registra_log_hausz(self): pass
+    def registra_log_hausz(self) -> None: pass
 
-    def registra_log_hausz(self):pass
+    def registra_log_hausz(self) -> None:pass
 
-    def check_pedido_venda_hausz(self):pass
+    def check_pedido_venda_hausz(self) -> None:pass
 
-    def check_pedido_compras_hausz(self):pass
+    def check_pedido_compras_hausz(self) -> None:pass
 
-    def check_notas_hausz(self):pass
+    def check_notas_hausz(self) -> None:pass
 
 
 class PedidosComprasHausz(HauszMapa):
@@ -47,14 +47,14 @@ class PedidosComprasHausz(HauszMapa):
         self.dataatual = dataatual
 
 
-    def registra_log_hausz(self): pass
+    def registra_log_hausz(self) -> None: pass
 
-    def registra_log_hausz(self):pass
+    def registra_log_hausz(self) -> None:pass
 
-    def check_pedido_venda_hausz(self):pass
+    def check_pedido_venda_hausz(self) -> None:pass
 
-    def check_pedido_compras_hausz(self):pass
+    def check_pedido_compras_hausz(self) -> None:pass
 
-    def check_notas_hausz(self):pass
+    def check_notas_hausz(self) -> None:pass
 
 
