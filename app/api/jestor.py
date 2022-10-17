@@ -46,7 +46,6 @@ def api_get_jestor(f):
     return get_jestor_notafiscal
 
 
-
 @api_get_jestor
 def get_parametros_nfe(*args: Any, **kwargs: Dict[str, Any]) -> Any:
     """Parametros entrada notas venda"""
@@ -67,21 +66,22 @@ def get_clientes_jestor(*args: Any, **kwargs: Dict[str, Any]) -> Any:
 
 @jestor_bp.route('/api/v1/jestor/notapedido/nfpedido/all', methods=['GET','POST'])
 def get_jestor_nf() -> Response:
- 
-    all_notas = get_parametros_nfe()
+    all_notas = next(get_parametros_nfe())
+    if isinstance(all_notas, dict):
+        print(all_notas)
+        return jsonify('aaaaa'), 201
+    return jsonify({'Error':"notfound"}), 403
 
-    return jsonify({'Pedido':all_notas}), 201
 
-
-@jestor_bp.route('/api/v1/jestor/pedidos/pedidositens/all')
+@jestor_bp.route('/api/v1/jestor/pedidos/pedidositens/all', methods=['GET','POST'])
 def get_jestor_pedido_item_all() -> Response:
     tabela_jestor = 'pedidos_itens_hausz'
-    jsons = get_pedidos_itens_jestor(tabela = tabela_jestor)
-    print(jsons)
-    
-    data_jsons = request.get_json()
-
-    return jsonify(data_jsons), 201
+    jsons = next(get_pedidos_itens_jestor(tabela = tabela_jestor))
+    if isinstance(jsons, dict):
+        return jsonify({jsons.get('codigopedido'):jsons})
+    else:
+        return jsonify({"error":"NotFound"})
+  
 
 @jestor_bp.route('/api/v1/jestor/pedidos/pedidositens/<data>')
 def get_jestor_pedido_item_data(data: Any) -> Response:
@@ -149,7 +149,6 @@ def get_jestor_pv(refpedido: str) -> Any:
     refpedido = request.get_json()
     values = refpedido['refpedido']
     return values
-
 
 @jestor_bp.route('/api/v1/jestor/notapedido/<cliente>', methods=['GET','POST'])
 def get_jestor_pv_cliente(cliente):
