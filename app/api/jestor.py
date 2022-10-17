@@ -1,12 +1,15 @@
 from flask import Blueprint, request, jsonify, make_response, Response, abort
 from functools import wraps
 import requests
-from typing import Dict, Tuple, List, Any
+from typing import Dict, Tuple, List, Any, Literal
 from itertools import chain
 import os
 from dotenv import load_dotenv
 
+
 jestor_bp = Blueprint('jestor', __name__)
+
+from ..controllers.controllers_jestor import JestorHausz
 
 API_KEY_JESTOR = os.getenv('API_KEY_JESTOR')
 
@@ -15,7 +18,7 @@ def api_get_jestor(f):
     @wraps(f)
     def get_jestor_notafiscal(*args: tuple, **kwargs: Dict[str, Any]) -> Any:
         print(args, kwargs)
-        print('Envia requisicao JESTOR CONSULTA | METODO GET')
+        print('GET JESTOR | METODO GET')
         url = "https://supply.api.jestor.com/object/list"
         payload = {
         "object_type": f"{kwargs.get('tabela')}",
@@ -68,15 +71,10 @@ def get_clientes_jestor(*args: Any, **kwargs: Dict[str, Any]) -> Any:
 def get_jestor_nf() -> Response:
     tabela = 'notas_fiscais_de_vendas'
     all_notas = next(get_parametros_nfe(tabela))
-    print(all_notas)
-    return jsonify({"aaa":"aaaa"})
+    if isinstance(all_notas, dict):
+        return jsonify({all_notas})
+    return ({"error":"notfound"})
 
-
-    '''
-        return jsonify({all_notas.get('codigopedido'):all_notas})
-    else:
-        return jsonify({"error":"NotFound"})
-    '''
 
 @jestor_bp.route('/api/v1/jestor/pedidos/pedidositens/all', methods=['GET','POST'])
 def get_jestor_pedido_item_all() -> Response:
@@ -104,7 +102,7 @@ def get_jestor_pedido_item_refpedido(refpedido: Any) -> Response:
 
 
 @jestor_bp.route('/api/v1/jestor/clientes/all')
-def get_jestor_clientes_all():
+def get_jestor_clientes_all()-> tuple[Response, Literal[201]]:
     tabela = 'clientes'
     clientes = get_clientes_jestor(tabela)
     return jsonify(clientes), 201
