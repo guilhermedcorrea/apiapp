@@ -11,7 +11,7 @@ jestor_bp = Blueprint('jestor', __name__)
 API_KEY_JESTOR = os.getenv('API_KEY_JESTOR')
 
 
-def get_metodo_nf(f):
+def api_get_jestor(f):
     @wraps(f)
     def get_jestor_notafiscal(*args: tuple, **kwargs: Dict[str, Any]) -> Any:
         print(args, kwargs)
@@ -36,19 +36,19 @@ def get_metodo_nf(f):
 
 
 
-@get_metodo_nf
+@api_get_jestor
 def get_parametros_nfe(*args: Any, **kwargs: Dict[str, Any]) -> Any:
     """Parametros entrada notas venda"""
     print('Called function --> NF')
     
         
-@get_metodo_nf
+@api_get_jestor
 def get_pedidos_itens_jestor(*args: Any, **kwargs: Dict[str, Any]) -> Any:
     """Parametros entrada pedidos itens"""
     print('Called function --> pedidos itens')
     
 
-@get_metodo_nf
+@api_get_jestor
 def get_clientes_jestor(*args: Any, **kwargs: Dict[str, Any]) -> Any:
     """Parametros entrada clientes"""
     print('Called function --> clientes')
