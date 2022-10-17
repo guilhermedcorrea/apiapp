@@ -27,7 +27,7 @@ def get_metodo_nf(f):
         print('Envia requisicao JESTOR CONSULTA | METODO GET')
         url = "https://supply.api.jestor.com/object/list"
         payload = {
-        "object_type": f"{kwargs.get('tabela')}",
+        "object_type": f"{kwargs.get('tabela')}", #Nome da tabela
         "sort": "number_field desc",
         "page": 1,
         "size": "10"
