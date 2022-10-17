@@ -1,4 +1,4 @@
-from base_log import HauszMapa
+from .base_log import HauszMapa
 from sqlalchemy import text
 from flask_sqlalchemy import SQLAlchemy
 from typing import Dict, Tuple, List, Any, Generator, Literal

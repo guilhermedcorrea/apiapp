@@ -1,12 +1,15 @@
-from flask import Blueprint, request, jsonify, make_response, Response
+from flask import Blueprint, request, jsonify, make_response, Response, abort
 from functools import wraps
 import requests
-from ..controllers.controllers_pedidos import get_pedidos_flexy
 from typing import Dict, Tuple, List, Any
 from itertools import chain
-
+import os
+from dotenv import load_dotenv
 
 jestor_bp = Blueprint('jestor', __name__)
+
+API_KEY_JESTOR = os.getenv('API_KEY_JESTOR')
+
 
 def get_metodo_nf(f):
     @wraps(f)
@@ -18,12 +21,12 @@ def get_metodo_nf(f):
         "object_type": f"{kwargs.get('tabela')}",
         "sort": "number_field desc",
         "page": 1,
-        "size": "10"
+        "size": "2"
         }
         headers = {
             "accept": "application/json",
             "content-type": "application/json",
-            "Authorization": "Bearer YjE5NzI5N2Q5YjA2MmEw1a23e3b4a7MTY2NDIzMDAyODg1ZTg2"
+            "Authorization": f"{API_KEY_JESTOR}"
         }
 
         response = requests.post(url, json=payload, headers=headers)
@@ -45,58 +48,80 @@ def get_pedidos_itens_jestor(*args: Any, **kwargs: Dict[str, Any]) -> Any:
     print('Called function --> pedidos itens')
     
 
+@get_metodo_nf
+def get_clientes_jestor(*args: Any, **kwargs: Dict[str, Any]) -> Any:
+    """Parametros entrada clientes"""
+    print('Called function --> clientes')
+
+
 @jestor_bp.route('/api/v1/jestor/notapedido/nfpedido/all', methods=['GET','POST'])
 def get_jestor_nf() -> Response:
  
     all_notas = get_parametros_nfe()
-    jsons = get_pedidos_flexy()
-    pedido = [x for x in next(jsons)]
-    return jsonify({'Pedido':pedido})
+
+    return jsonify({'Pedido':all_notas}), 201
 
 
 @jestor_bp.route('/api/v1/jestor/pedidos/pedidositens/all')
 def get_jestor_pedido_item_all() -> Response:
     tabela_jestor = 'pedidos_itens_hausz'
     jsons = get_pedidos_itens_jestor(tabela = tabela_jestor)
-    data_jsons = request.get_json()
     print(jsons)
-  
-    return jsonify(data_jsons)
+    
+    data_jsons = request.get_json()
+
+    return jsonify(data_jsons), 201
 
 @jestor_bp.route('/api/v1/jestor/pedidos/pedidositens/<data>')
 def get_jestor_pedido_item_data(data: Any) -> Response:
     data = request.get_json()
     values = data['data']
 
-    return jsonify(values)
+    return jsonify(values), 201
 
 @jestor_bp.route('/api/v1/jestor/pedidos/pedidositens/<refpedido>')
 def get_jestor_pedido_item_refpedido(refpedido: Any) -> Response:
     refpedido = request.get_json()
     values = refpedido['refpedido']
 
-    return jsonify(values)
+    return jsonify(values), 201
+
+
+@jestor_bp.route('/api/v1/jestor/clientes/all')
+def get_jestor_clientes_all():
+    tabela = 'clientes'
+    clientes = get_clientes_jestor(tabela)
+    return jsonify(clientes), 201
+
+
+@jestor_bp.route('/api/v1/jestor/clientes/<refcliente>')
+def get_jestor_clientes_ref_cliente(refcliente: Any) -> Response:
+    tabela = 'clientes'
+    refcliente = request.get_json()
+    values = refcliente['refcliente']
+    clientes = get_clientes_jestor(tabela)
+    return jsonify(clientes)
 
 @jestor_bp.route('/api/v1/jestor/pedidos/pedidositens/<status>')
 def get_jestor_pedido_item_status(status: Any) -> Response:
     status = request.get_json()
     values = status['status']
 
-    return jsonify(values)
+    return jsonify(values), 201
 
 @jestor_bp.route('/api/v1/jestor/pedidos/pedidositens/<cliente>')
 def get_jestor_pedido_item_cliente(cliente: Any) -> Response:
     cliente = request.get_json()
     values = cliente['cliente']
 
-    return jsonify(values)
+    return jsonify(values), 201
 
 @jestor_bp.route('/api/v1/jestor/<item>', methods=['GET','POST'])
 def get_jestor_nf_item(item: str) -> Any:
     item = request.get_json()
     values = item['item']
 
-    return jsonify(values)
+    return jsonify(values), 201
 
 
 @jestor_bp.route('/api/v1/jestor/notapedido/<idnf>', methods=['GET','POST'])
