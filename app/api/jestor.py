@@ -66,12 +66,17 @@ def get_clientes_jestor(*args: Any, **kwargs: Dict[str, Any]) -> Any:
 
 @jestor_bp.route('/api/v1/jestor/notapedido/nfpedido/all', methods=['GET','POST'])
 def get_jestor_nf() -> Response:
-    all_notas = next(get_parametros_nfe())
-    if isinstance(all_notas, dict):
-        print(all_notas)
-        return jsonify('aaaaa'), 201
-    return jsonify({'Error':"notfound"}), 403
+    tabela = 'notas_fiscais_de_vendas'
+    all_notas = next(get_parametros_nfe(tabela))
+    print(all_notas)
+    return jsonify({"aaa":"aaaa"})
 
+
+    '''
+        return jsonify({all_notas.get('codigopedido'):all_notas})
+    else:
+        return jsonify({"error":"NotFound"})
+    '''
 
 @jestor_bp.route('/api/v1/jestor/pedidos/pedidositens/all', methods=['GET','POST'])
 def get_jestor_pedido_item_all() -> Response:
