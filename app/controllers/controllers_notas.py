@@ -44,11 +44,11 @@ class NotasHausz:
         self.unidade = unidade
         self.lista_dicts = []
 
-    def seleciona_fields(self): pass
+    def seleciona_fields(self, *args: tuple, **kwargs: dict[str, Any]) -> dict[str, Any]:pass
 
     def get_jsons_api(self): pass
 
-    def emissao_nf(self): pass
+    def emissao_nf(self) -> None: pass
 
        
 

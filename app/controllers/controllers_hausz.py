@@ -31,9 +31,7 @@ class PedidosVendaHausz(HauszMapa):
                 yield 'notfound'
 
 
-    def registra_log_hausz(self) -> None: pass
-
-    def registra_log_hausz(self) -> None:pass
+    def registra_log_hausz(self, *args: tuple, **kwargs: dict[str, Any]) -> dict[str, Any]:pass
 
     def check_pedido_venda_hausz(self) -> None:pass
 
@@ -47,9 +45,7 @@ class PedidosComprasHausz(HauszMapa):
         self.dataatual = dataatual
 
 
-    def registra_log_hausz(self) -> None: pass
-
-    def registra_log_hausz(self) -> None:pass
+    def registra_log_hausz(self, *args: tuple, **kwargs: dict[str, Any]) -> dict[str, Any]:pass
 
     def check_pedido_venda_hausz(self) -> None:pass
 
