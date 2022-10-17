@@ -2,11 +2,11 @@
 from flask import Flask
 from config import SQLALCHEMY_DATABASE_URI
 import os
-from .extensions import db, apifairy, ma
+from .extensions import db, ma
 
 from flask_sqlalchemy import SQLAlchemy
 
-def create_app(test_config=None):
+def create_app(test_config=None) -> Flask:
 
     app = Flask(__name__, instance_relative_config=True)
     if test_config is None:
@@ -14,24 +14,20 @@ def create_app(test_config=None):
             SECRET_KEY=os.getenv('UID'),
             SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI,
             SQLALCHEMY_TRACK_MODIFICATIONS=False,
-            APIFAIRY_TITLE = 'Integração HauszJestor',
-            APIFAIRY_VERSION = 'v1.0',
-            APIFAIRY_UI = 'swagger_ui',
-
-
+           
         )
     else:
         app.config.from_mapping(test_config)
 
-    db.init_app(app)
-    apifairy.init_app(app)
-    ma.init_app(app)
+ 
+    from .api.cadastra_nf import cadastro_bp
+    from .api.consulta_nf import consulta_bp
+    from .api.jestor import jestor_bp
 
-
-    from .api.api_notas_compras import nfcompras_bp
-  
     with app.app_context():
-    
-        app.register_blueprint(nfcompras_bp)
+      
+        app.register_blueprint(cadastro_bp)
+        app.register_blueprint(consulta_bp)
+        app.register_blueprint(jestor_bp)
  
     return app
