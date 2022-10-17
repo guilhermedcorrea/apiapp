@@ -36,3 +36,26 @@ def get_metodo_nf(f):
         response = requests.post(url, json=payload, headers=headers)
         return response.json()
 ```
+
+
+##controllers_hausz
+```
+classe PedidosVendaHausz e HauszMapa Faz inserção de registros e logs
+```
+
+```python
+
+class HauszMapa(ABC):
+    def call_func_hausz_mapa(self): pass
+
+class PedidosVendaHausz(HauszMapa):
+    def __init__(self, dataatual):
+        self.dataatual = dataatual
+
+class NotasHausz:
+    def __init__(self, pedido, data, unidade):
+        self.pedido = pedido
+        self.data = data
+        self.unidade = unidade
+
+```

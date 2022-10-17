@@ -5,7 +5,7 @@ from flask_marshmallow import Marshmallow
 from sqlalchemy import text
 from itertools import chain
 
-from ..controllers.controllers_pedidos import get_pedidos_flexy
+from ..controllers.controllers_hausz import PedidosComprasHausz
 
 cadastro_bp = Blueprint('cadastronf', __name__)
 import os
