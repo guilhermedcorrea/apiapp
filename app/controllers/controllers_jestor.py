@@ -69,6 +69,9 @@ class JestorHausz(Jestor):
 
     def check_notas_jestor(self) -> None:pass
 
+
+    
+
     
 
 
