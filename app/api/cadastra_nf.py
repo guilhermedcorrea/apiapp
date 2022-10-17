@@ -31,7 +31,7 @@ def cadastra_notas() -> Response:
     #pedidos = get_pedidos_flexy()
     #pedido = [x for x in next(pedidos)]
 
-    return jsonify({"teste":'123'}), 201
+    return jsonify({"nf":'emissao'}), 201
 
 
 @cadastro_bp.route("/api/v1/companies/cancelamento/", methods=['GET','POST'])
