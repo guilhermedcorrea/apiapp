@@ -26,15 +26,16 @@ https://nfe.io/docs/desenvolvedores/rest-api/nota-fiscal-de-produto-v2/#/
 
 @cadastro_bp.route("/api/v1/companies/emissao/", methods=['GET','POST'])
 def cadastra_notas() -> Response:
-    #valores = request.get_json()
-    pedidos = get_pedidos_flexy()
-    pedido = [x for x in next(pedidos)]
+    valores = request.get_json()
+    print(valores)
+    #pedidos = get_pedidos_flexy()
+    #pedido = [x for x in next(pedidos)]
 
-    return jsonify({"teste":pedido}), 201
+    return jsonify({"teste":'123'}), 201
 
 
 @cadastro_bp.route("/api/v1/companies/cancelamento/", methods=['GET','POST'])
-def cancela_nota():
+def cancela_nota() -> Response:
     id_nf  = request.get_json()
  
     return jsonify({"CANCEANF":id_nf}),201
