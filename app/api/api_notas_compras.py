@@ -24,8 +24,6 @@ class PedidoComprasNotaentradaSchema(ma.Schema):
     criadoem = ma.Date()
 
 
-
-
 nfcompras_bp = Blueprint('nfcompras', __name__, url_prefix='/notas/compras')
 
 @nfcompras_bp.route('/api/v1/hausz/notascompras/<int:page>')
