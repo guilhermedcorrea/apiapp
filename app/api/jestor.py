@@ -30,7 +30,18 @@ def api_get_jestor(f):
         }
         print(kwargs.get('tabela'))
         response = requests.post(url, json=payload, headers=headers)
-        return response.json()
+        strs = response.json()
+        try:
+            for items in strs:
+                dicts = strs[items]
+                if isinstance(dicts, dict):
+                    dict_items = dicts.get('items')
+                    for values in dict_items:
+                        if next(filter(lambda k: len(k) > 0, values), None):
+                            yield values.get('codigo_pedido')
+        
+        except Exception as e:
+            print("error", e)
 
     return get_jestor_notafiscal
 
