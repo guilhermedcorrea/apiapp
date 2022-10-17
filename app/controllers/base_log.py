@@ -26,7 +26,6 @@ def registro_pedidos() -> None:
 class HauszMapa(ABC):
     def call_func_hausz_mapa(self) -> None: pass
      
-
     def before(self) -> None:pass
 
     def insert_pedidos_hausz(self) -> None: pass

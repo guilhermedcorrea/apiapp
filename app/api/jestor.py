@@ -28,7 +28,7 @@ def api_get_jestor(f):
             "content-type": "application/json",
             "Authorization": f"{API_KEY_JESTOR}"
         }
-
+        print(kwargs.get('tabela'))
         response = requests.post(url, json=payload, headers=headers)
         return response.json()
 
