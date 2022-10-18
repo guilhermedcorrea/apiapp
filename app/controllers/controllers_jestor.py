@@ -19,7 +19,7 @@ def api_get_jestor(f):
         "object_type": f"{kwargs.get('tabela')}",
         "sort": "number_field desc",
         "page": 1,
-        "size": "2"
+        "size": "10"
         }
         headers = {
             "accept": "application/json",
@@ -46,7 +46,6 @@ def api_get_jestor(f):
             print("error", e)
              
     return get_jestor_notafiscal
-
 
 class JestorHausz(Jestor):
     def __init__(self, data = None, pedido = None, cliente = None, nf = None
@@ -79,11 +78,15 @@ class JestorHausz(Jestor):
     @api_get_jestor
     def get_clientes_jestor(self, *args: Any, **kwargs: dict[str, Any]) -> dict[str, Any]:
         return kwargs
-        
+    
+    @api_get_jestor
+    def get_pedidos_compras_jestor(self, *args: Any, **kwargs: dict[str, Any]) -> dict[str, Any]:
+        return kwargs
+    
     def registra_log_jestor(self, *agrs, **kwargs) -> None:
         return kwargs
 
-    def insert_valores_jestor(self, *args: tuple, **kwargs: dict[str, Any]):
+    def insert_valores_jestor(self, *args: tuple, **kwargs: dict[str, Any]) -> None:
         return kwargs
 
     def check_pedido_venda_jestor(self) -> None:

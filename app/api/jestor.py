@@ -12,9 +12,6 @@ jestor_bp = Blueprint('jestor', __name__)
 from ..controllers.controllers_jestor import JestorHausz
 
 
-
-
-
 @jestor_bp.route('/api/v1/jestor/notapedido/nfpedido/all', methods=['GET','POST'])
 def get_jestor_nf() -> Response:
     tabela = 'notas_fiscais_de_vendas'
@@ -51,7 +48,7 @@ def get_jestor_pedido_item_data(data: Any) -> Response:
     values = data['data']
 
     return jsonify(values), 201
-'''
+
 @jestor_bp.route('/api/v1/jestor/pedidos/pedidositens/<refpedido>')
 def get_jestor_pedido_item_refpedido(refpedido: Any) -> Response:
     refpedido = request.get_json()
@@ -63,7 +60,7 @@ def get_jestor_pedido_item_refpedido(refpedido: Any) -> Response:
 @jestor_bp.route('/api/v1/jestor/clientes/all')
 def get_jestor_clientes_all()-> tuple[Response, Literal[201]]:
     tabela = 'clientes'
-    clientes = get_clientes_jestor(tabela)
+    clientes = JestorHausz.get_clientes_jestor(tabela)
     return jsonify(clientes), 201
 
 
@@ -72,7 +69,7 @@ def get_jestor_clientes_ref_cliente(refcliente: Any) -> Response:
     tabela = 'clientes'
     refcliente = request.get_json()
     values = refcliente['refcliente']
-    clientes = get_clientes_jestor(tabela)
+    clientes = JestorHausz.get_clientes_jestor(tabela)
     return jsonify(clientes)
 
 @jestor_bp.route('/api/v1/jestor/pedidos/pedidositens/<status>')
@@ -99,7 +96,7 @@ def get_jestor_nf_item(item: str) -> Any:
 
 @jestor_bp.route('/api/v1/jestor/notapedido/<idnf>', methods=['GET','POST'])
 def get_jestor_nf_pedido_idnf(idnf: int) -> Any:
-    jsons = get_parametros_nfe()
+    jsons = JestorHausz.get_parametros_nfe()
     idnf = request.get_json()
     values = idnf['idnf']
 
@@ -107,18 +104,17 @@ def get_jestor_nf_pedido_idnf(idnf: int) -> Any:
 
 @jestor_bp.route('/api/v1/jestor/pedido/<refpedido>', methods=['GET','POST'])
 def get_jestor_pv(refpedido: str) -> Any:
-    jsons = get_parametros_nfe()
+    jsons = JestorHausz.get_parametros_nfe()
     refpedido = request.get_json()
     values = refpedido['refpedido']
     return values
 
 @jestor_bp.route('/api/v1/jestor/notapedido/<cliente>', methods=['GET','POST'])
 def get_jestor_pv_cliente(cliente):
-    jsons = get_parametros_nfe()
+    jsons = JestorHausz.get_parametros_nfe()
     cliente = request.get_json()
     values = cliente['cliente']
     return values
 
 
 
-'''
