@@ -11,80 +11,39 @@ jestor_bp = Blueprint('jestor', __name__)
 
 from ..controllers.controllers_jestor import JestorHausz
 
-API_KEY_JESTOR = os.getenv('API_KEY_JESTOR')
 
 
-def api_get_jestor(f):
-    @wraps(f)
-    def get_jestor_notafiscal(*args: tuple, **kwargs: Dict[str, Any]) -> Any:
-        print(args, kwargs)
-        print('GET JESTOR | METODO GET')
-        url = "https://supply.api.jestor.com/object/list"
-        payload = {
-        "object_type": f"{kwargs.get('tabela')}",
-        "sort": "number_field desc",
-        "page": 1,
-        "size": "2"
-        }
-        headers = {
-            "accept": "application/json",
-            "content-type": "application/json",
-            "Authorization": f"{API_KEY_JESTOR}"
-        }
-        print(kwargs.get('tabela'))
-        response = requests.post(url, json=payload, headers=headers)
-        strs = response.json()
-        try:
-            for items in strs:
-                dicts = strs[items]
-                if isinstance(dicts, dict):
-                    dict_items = dicts.get('items')
-                    for values in dict_items:
-                        if next(filter(lambda k: len(k) > 0, values), None):
-                            yield values.get('codigo_pedido')
-        
-        except Exception as e:
-            print("error", e)
-
-    return get_jestor_notafiscal
-
-
-@api_get_jestor
-def get_parametros_nfe(*args: Any, **kwargs: Dict[str, Any]) -> Any:
-    """Parametros entrada notas venda"""
-    print('Called function --> NF')
-    
-        
-@api_get_jestor
-def get_pedidos_itens_jestor(*args: Any, **kwargs: Dict[str, Any]) -> Any:
-    """Parametros entrada pedidos itens"""
-    print('Called function --> pedidos itens')
-    
-
-@api_get_jestor
-def get_clientes_jestor(*args: Any, **kwargs: Dict[str, Any]) -> Any:
-    """Parametros entrada clientes"""
-    print('Called function --> clientes')
 
 
 @jestor_bp.route('/api/v1/jestor/notapedido/nfpedido/all', methods=['GET','POST'])
 def get_jestor_nf() -> Response:
     tabela = 'notas_fiscais_de_vendas'
-    all_notas = next(get_parametros_nfe(tabela))
-    if isinstance(all_notas, dict):
-        return jsonify({all_notas})
+    all_notas = next(JestorHausz.get_parametros_nfe(tabela))
+    print(all_notas)
+    #if isinstance(all_notas, dict):
+    #    return jsonify({all_notas})
     return ({"error":"notfound"})
 
 
 @jestor_bp.route('/api/v1/jestor/pedidos/pedidositens/all', methods=['GET','POST'])
 def get_jestor_pedido_item_all() -> Response:
+    """Consulta e Insere Pedidos no jestor"""
     tabela_jestor = 'pedidos_itens_hausz'
-    jsons = next(get_pedidos_itens_jestor(tabela = tabela_jestor))
+    jsons = next(JestorHausz.get_api_jestor(tabela = tabela_jestor))
     if isinstance(jsons, dict):
-        return jsonify({jsons.get('codigopedido'):jsons})
-    else:
-        return jsonify({"error":"NotFound"})
-  
+        if request.method == 'GET':
+            try:
+                return ({jsons.get('codigopedido'):jsons})
+            except Exception as e:
+                return ("error", e)
+        elif request.method == 'POST':
+            try:
+                return jsonify("cria dict, insere pedido {}".format(jsons.get('codigopedido')))
+            except Exception as e:
+                return ("error", e)
+        return "Error"
+    return "Error"
+   
 
 @jestor_bp.route('/api/v1/jestor/pedidos/pedidositens/<data>')
 def get_jestor_pedido_item_data(data: Any) -> Response:
@@ -92,7 +51,7 @@ def get_jestor_pedido_item_data(data: Any) -> Response:
     values = data['data']
 
     return jsonify(values), 201
-
+'''
 @jestor_bp.route('/api/v1/jestor/pedidos/pedidositens/<refpedido>')
 def get_jestor_pedido_item_refpedido(refpedido: Any) -> Response:
     refpedido = request.get_json()
@@ -162,3 +121,4 @@ def get_jestor_pv_cliente(cliente):
 
 
 
+'''
