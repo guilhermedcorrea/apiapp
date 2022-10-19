@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, make_response, Response, abort
+from flask import Blueprint, request, jsonify, make_response, Response, abort, current_app
 from functools import wraps
 import requests
 from typing import Dict, Tuple, List, Any, Literal
@@ -7,7 +7,35 @@ import os
 from dotenv import load_dotenv
 
 
+def register_handlers(app):
+    if current_app.config.get('DEBUG') is True:
+        current_app.logger.debug('Errors')
+        return
+
+    @current_app.errorhandler(404)
+    def not_found_error(error):
+        return make_response(jsonify({'error': 'Not found'}), 404)
+
+    @current_app.errorhandler(500)
+    def internal_error(error):
+        return make_response(jsonify({"Error":"internal error"}), 500)
+    
+
+    @current_app.errorhandler(500)
+    def ModuleNotFoundError(*args, **kwargs):
+        return make_response(jsonify({"Error":"internal error"}), 500)
+
+    @current_app.errorhandler(404)
+    def page_not_found(*args, **kwargs):
+        return make_response(jsonify({"Error":"Endpoint NotFound"}), 404)
+   
+    @current_app.errorhandler(405)
+    def method_not_allowed_page(*args, **kwargs):
+        return make_response(jsonify({"Error":"Endpoint NotFound"}), 405)
+
+
 jestor_bp = Blueprint('jestor', __name__)
+register_handlers(current_app)
 
 from ..controllers.controllers_jestor import JestorHausz
 
@@ -32,12 +60,13 @@ def get_jestor_pedido_item_all() -> Response:
             try:
                 return ({jsons.get('codigopedido'):jsons})
             except Exception as e:
-                return ("error", e)
+                abort(400)
         elif request.method == 'POST':
             try:
                 return jsonify("cria dict, insere pedido {}".format(jsons.get('codigopedido')))
             except Exception as e:
-                return ("error", e)
+                abort(400)
+                
         return "Error"
     return "Error"
    
@@ -53,7 +82,6 @@ def get_jestor_pedido_item_data(data: Any) -> Response:
 def get_jestor_pedido_item_refpedido(refpedido: Any) -> Response:
     refpedido = request.get_json()
     values = refpedido['refpedido']
-
     return jsonify(values), 201
 
 

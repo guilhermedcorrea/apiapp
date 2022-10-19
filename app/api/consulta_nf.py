@@ -1,12 +1,40 @@
 from typing import Any
-from flask import Blueprint, request, jsonify, make_response, Response, abort
+from flask import Blueprint, request, jsonify, make_response, Response, abort, current_app
 from functools import wraps
 import os
 from dotenv import load_dotenv
 import requests
-
 from typing import Dict, Tuple, List
+
+
+def register_handlers(app):
+    if current_app.config.get('DEBUG') is True:
+        current_app.logger.debug('Errors')
+        return
+
+    @current_app.errorhandler(404)
+    def not_found_error(error):
+        return make_response(jsonify({'error': 'Not found'}), 404)
+
+    @current_app.errorhandler(500)
+    def internal_error(error):
+        return make_response(jsonify({"Error":"internal error"}), 500)
+    
+
+    @current_app.errorhandler(500)
+    def ModuleNotFoundError(*args, **kwargs):
+        return make_response(jsonify({"Error":"internal error"}), 500)
+
+    @current_app.errorhandler(404)
+    def page_not_found(*args, **kwargs):
+        return make_response(jsonify({"Error":"Endpoint NotFound"}), 404)
+   
+    @current_app.errorhandler(405)
+    def method_not_allowed_page(*args, **kwargs):
+        return make_response(jsonify({"Error":"Endpoint NotFound"}), 405)
+
 consulta_bp = Blueprint('consultanf', __name__)
+register_handlers(current_app)
 
 from ..controllers.controllers_notas import get_metodo
 
