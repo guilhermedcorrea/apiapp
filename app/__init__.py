@@ -3,14 +3,18 @@ from flask import Flask
 from config import SQLALCHEMY_DATABASE_URI
 import os
 from .extensions import db, ma
-
+from flask import make_response, jsonify
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
+def page_not_found(e):
+  return make_response(jsonify({'error': 'Not found'}), 404)
+
 def create_app(test_config=None) -> Flask:
 
     app = Flask(__name__, instance_relative_config=True)
+    app.register_error_handler(404, page_not_found)
     if test_config is None:
         app.config.from_mapping(
             SECRET_KEY=os.getenv('UID'),
