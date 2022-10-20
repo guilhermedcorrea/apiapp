@@ -36,7 +36,7 @@ def register_handlers(app):
 consulta_bp = Blueprint('consultanf', __name__)
 register_handlers(current_app)
 
-from ..controllers.controllers_notas import get_metodo
+from ..controllers.controllers_notas import get_metodo, list_all_empresas
 
 """
 NOTA FISCAL CONSUMIDOR
@@ -45,8 +45,9 @@ NOTA FISCAL CONSUMIDOR
 load_dotenv()
 
 
-API_KEY_CONSULTA = os.getenv('API_KEY_CONSULTA')
-COMPANY_ID_CONSULTA = os.getenv('COMPANY_ID_CONSULTA')
+
+API_KEY_EMISSAO = os.getenv('API_KEY_EMISSAO')
+COMPANY_ID_EMISSAO = os.getenv('COMPANY_ID_EMISSAO')
 
 
 @get_metodo
@@ -55,17 +56,28 @@ def get_parametros(*args: tuple, **kwargs: Dict[str, Any]) -> None:
     print('Called example function')
 
 
+@list_all_empresas
+def get_list_empresas(*args: tuple, **kwargs: Dict[str, Any]) -> None:
+    print("teste")
+
+
 """
 Lista notas
 https://nfe.io/docs/desenvolvedores/rest-api/nota-fiscal-de-consumidor-v2/#/
 
 """
-@consulta_bp.route('/api/v1/companies/consumerinvoices/', methods=['GET','POST'])
+
+@consulta_bp.route('/api/v2/list/companies/all', methods=['GET','POST'])
 def listas_nfs() -> Response:
-    jsons = get_parametros(compani_id= COMPANY_ID_CONSULTA,ambiente_nf='test', api_key=API_KEY_CONSULTA)
+    try:
+        jsons = get_list_empresas(api_key= API_KEY_EMISSAO)
+        return make_response(jsonify(jsons)), 201
+    except:
+        abort(400)
 
-    return jsonify({"NFE":jsons})
 
+
+'''
 @consulta_bp.route('/api/v1/companies/consumerinvoices/<consumer_invoice_id>', methods=['GET','POST'])
 def consultar_nf_id(consumer_invoice_id: str) -> Response:
     consumer_invoice_id = request.get_json()
@@ -102,3 +114,4 @@ def consultar_xml_rejeicao_id(consumer_invoice_id: str) -> Response:
     values = consumer_invoice_id['consumer_invoice_id']
     print(values)
     return jsonify({"Notas":values})
+'''

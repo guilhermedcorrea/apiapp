@@ -63,6 +63,5 @@ def executa_select():
         exec_produtos = conn.execute(get_pedidos).all()
 
         query_dicts = [{key: value for (key, value) in row.items()} for row in exec_produtos]
-        print(query_dicts)
         yield query_dicts
        

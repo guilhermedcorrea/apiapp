@@ -24,10 +24,10 @@ def create_app() -> Flask:
    
     with app.app_context():
         #from .api.cadastra_nf import cadastro_bp
-        #from .api.consulta_nf import consulta_bp
+        from .api.consulta_nf import consulta_bp
         from .api.jestor import jestor_bp
         #app.register_blueprint(cadastro_bp)
-        #app.register_blueprint(consulta_bp)
+        app.register_blueprint(consulta_bp)
         app.register_blueprint(jestor_bp)
  
     return app

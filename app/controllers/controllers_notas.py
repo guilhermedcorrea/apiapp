@@ -19,6 +19,8 @@ def get_metodo(f) -> Any:
     @wraps(f)
     def obtem_endpoint(*args: tuple, **kwargs: Dict[str, Any]) -> Any:
         print('Envia requisicao NFE IO CONSULTA | METODO GET')
+      
+
         url = """https://api.nfse.io/v2/companies/{}/consumerinvoices?environment={}&apikey={}""".format(kwargs.get('compani_id'),kwargs.get('ambiente_nf'),kwargs.get('api_key'))
         payload={}
         headers = {}
@@ -35,6 +37,30 @@ def get_metodo(f) -> Any:
 def get_parametros(*args: tuple, **kwargs: Dict[str, Any]) -> None:
     """Docstring"""
     print('Called function')
+
+
+def list_all_empresas(f) -> Any:
+    @wraps(f)
+    def obtem_endpoint(*args: tuple, **kwargs: Dict[str, Any]) -> Any:
+
+        print('Envia requisicao NFE IO CONSULTA | METODO GET')
+      
+
+        url = "https://api.nfse.io/v2/companies?apikey={}".format(kwargs.get('api_key'))
+
+
+        payload={}
+        headers = {}
+
+        response = requests.request("GET", url, headers=headers, data=payload)
+        print(response.status_code)
+        jsons = response.json()
+
+        return jsons
+        
+    return obtem_endpoint
+
+
 
 
 class NotasHausz:
