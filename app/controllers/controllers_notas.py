@@ -11,8 +11,8 @@ NOTA FISCAL CONSUMIDOR
 """
 load_dotenv()
 
-API_KEY_CONSULTA = os.getenv('API_KEY_CONSULTA')
-COMPANY_ID_CONSULTA = os.getenv('COMPANY_ID_CONSULTA')
+API_KEY_EMISSAO = os.getenv('API_KEY_EMISSAO')
+COMPANY_ID_EMISSAO = os.getenv('COMPANY_ID_EMISSAO')
 
 def get_metodo(f) -> Any:
     @wraps(f)
@@ -41,7 +41,7 @@ def emissao_nfe(f) -> Any:
 
         print('emissao notas fiscais ')
 
-        url = "https://api.nfse.io/v2/companies/acd0c1c8f5a1486592c6ed80d94e2bb7/productinvoices/"
+        url = """https://api.nfse.io/v2/companies/{COMPANY_ID_EMISSAO}/productinvoices/""".format(COMPANY_ID_EMISSAO)
 
         payload = json.dumps({
         "buyer": {
@@ -54,7 +54,7 @@ def emissao_nfe(f) -> Any:
                 },"cofins": {"amount": 0,"rate": 0,"baseTax": 208,"cst": "08"}},"cest": "","description": "TESTE DE PRODUTO - WITMOB"
             }]})
         headers = {
-        'Authorization': 't0StUhoH4JiSN72ehwrhq3nQ27gRDTSJGt2W98rDXilRTwhNoJAiGtM9WUcl9MscjjW',
+        'Authorization': f'{API_KEY_EMISSAO}',
         'Content-Type': 'application/json'
         }
 

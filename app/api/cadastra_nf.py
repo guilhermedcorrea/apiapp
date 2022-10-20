@@ -79,14 +79,7 @@ def cadastra_notas() -> Response:
 
     return "teste"
 
-
-
-    
-
-
-   
-
-    
+  
 @cadastro_bp.route("/api/v1/companies/cancelamento/", methods=['GET','POST'])
 def cancela_nota() -> Response:
     id_nf  = request.get_json()
