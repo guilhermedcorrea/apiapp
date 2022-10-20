@@ -48,7 +48,6 @@ load_dotenv()
 API_KEY_EMISSAO = os.getenv('API_KEY_EMISSAO')
 COMPANY_ID_EMISSAO = os.getenv('COMPANY_ID_EMISSAO')
 
-
 """
 Emissao notas ficais
 https://nfe.io/docs/desenvolvedores/rest-api/nota-fiscal-de-produto-v2/#/
@@ -66,18 +65,25 @@ def cadastra_notas() -> Response:
     dados_pedido = executa_select()
     for pedidos in dados_pedido:
         for pedido in pedidos:
-            print(pedido.get('CodigoPedido'), pedido.get('EAN'), pedido.get('NCM'), pedido.get('CEST')
-            , pedido.get('SKU'), pedido.get('Quantidade'), pedido.get('PrecoUnitario'), pedido.get('IPI')
-            , pedido.get('nomecidadecliente'), pedido.get('nomestadocliente'), pedido.get('Endereco'), pedido.get('Complemento')
-            , pedido.get('Cep'), pedido.get('Numero'))
 
             """Metodo recebe parametros pedido e emite NF"""
-            #nf = notas_fiscais()
-       
+           
+            emissao_nf = notas_fiscais(pedido.get('CodigoPedido'), pedido.get('EAN'), pedido.get('NCM'), pedido.get('CEST')
+                , pedido.get('SKU'), pedido.get('Quantidade'), pedido.get('PrecoUnitario'), pedido.get('IPI')
+                , pedido.get('nomecidadecliente'), pedido.get('nomestadocliente'), pedido.get('Endereco'), pedido.get('Complemento')
+                , pedido.get('Cep'), pedido.get('Numero'))
 
-    #nf = notas_fiscais()
+            if emissao_nf:
+                return jsonify({"NFE":"EMITIDA"}), 201
+           
 
-    return 'teste'
+    return "teste"
+
+
+
+    
+
+
    
 
     
