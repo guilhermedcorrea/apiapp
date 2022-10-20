@@ -41,7 +41,7 @@ def executa_select():
                 ,unfranquia.[RazaoSocial] as 'RazaoSocialFranquiaVenda'
                 ,pflexy.[IdSistema],pflexy.[IdCardJestor],
                 ecliente.Bairro, ecliente.Endereco, ecliente.Complemento, ecliente.Cep, ecliente.Numero
-                , ecliente.Observacao,ecliente.IdCidade,ccidade.Nome, escliente.Nome
+                , ecliente.Observacao,ecliente.IdCidade,ccidade.Nome as 'nomecidadecliente', escliente.Nome as 'nomestadocliente'
                 FROM [HauszMapa].[Pedidos].[ItensFlexy] as iflexy
                 JOIN [HauszMapa].[Produtos].[ProdutoDetalhe] as pdetalhes
                 ON pdetalhes.IdProduto = iflexy.IdProduto

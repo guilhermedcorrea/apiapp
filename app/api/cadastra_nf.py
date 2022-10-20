@@ -65,7 +65,15 @@ def notas_fiscais(*args: tuple, **kwargs: Dict[str, Any]) -> None:
 def cadastra_notas() -> Response:
     dados_pedido = executa_select()
     for pedidos in dados_pedido:
-        print(pedidos)
+        for pedido in pedidos:
+            print(pedido.get('CodigoPedido'), pedido.get('EAN'), pedido.get('NCM'), pedido.get('CEST')
+            , pedido.get('SKU'), pedido.get('Quantidade'), pedido.get('PrecoUnitario'), pedido.get('IPI')
+            , pedido.get('nomecidadecliente'), pedido.get('nomestadocliente'), pedido.get('Endereco'), pedido.get('Complemento')
+            , pedido.get('Cep'), pedido.get('Numero'))
+
+            """Metodo recebe parametros pedido e emite NF"""
+            #nf = notas_fiscais()
+       
 
     #nf = notas_fiscais()
 
