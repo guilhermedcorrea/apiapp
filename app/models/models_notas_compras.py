@@ -1,4 +1,11 @@
-from ..extensions import db
+
+from flask_sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy()
+def configure(app):
+    db.init_app(app)
+    app.db = db
+
 
 class PedidoCompraNotaEntrada(db.Model):
     __tablename__ = "PedidoCompraNotaEntrada"
@@ -19,8 +26,6 @@ class PedidoCompraNotaEntrada(db.Model):
     IdStatusItem = db.Column(db.Integer)
     EnviadoWMS = db.Column(db.Integer)
 
-    def __repr__(self):
-        return f'{self.IdPedidoCompraNotaEntrada}'
 
 
 
@@ -44,8 +49,7 @@ class PedidoCompraShowroom(db.Model):
     Idfornecedor = db.Column(db.Integer, unique=False, nullable=True)
     StatusPgto = db.Column(db.Integer, unique=False, nullable=True)
 
-    def __repr__(self):
-        return f'{self.IdPedidoCompraItens}'
+
 
 
 class PedidoCompraItens(db.Model):

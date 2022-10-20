@@ -25,7 +25,7 @@ UPLOADFOLDER = join_path = os.path.join(
                 os.path.dirname(__file__)
                 , os.path.pardir)))
 
-print(UPLOADFOLDER,'uploadfolder')
+
 
 TEMPLATE_FOLDER = os.path.abspath(os.path.dirname(__file__))
 
@@ -48,3 +48,8 @@ SECRET_KEY = '5791628bb0b13ce0c676dfde280ba245'
 
 SQLALCHEMY_DATABASE_URI= ("mssql+pyodbc:///?odbc_connect=%s" % params)
 
+
+SQLALCHEMY_BINDS = {
+    "DATABASE1": ("mssql+pyodbc:///?odbc_connect=%s" %paramsdev),
+    "DATABASE2": ("mssql+pyodbc:///?odbc_connect=%s" %params)
+}

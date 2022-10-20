@@ -5,6 +5,8 @@ from typing import Dict, Tuple, List, Any, Literal
 from itertools import chain
 import os
 from dotenv import load_dotenv
+from ..controllers.controllers_hausz_mapa import executa_select
+from ..models.cliente_hausz_mapa import EnderecoPedidos
 
 
 def register_handlers(app):
@@ -42,14 +44,26 @@ from ..controllers.controllers_jestor import JestorHausz
 
 @jestor_bp.route('/api/v1/jestor/notapedido/nfpedido/all', methods=['GET','POST'])
 def get_jestor_nf() -> Response:
-    tabela = 'notas_fiscais_de_vendas'
-    all_notas = next(JestorHausz.get_parametros_nfe(tabela))
-    print(all_notas)
-    #if isinstance(all_notas, dict):
-    #    return jsonify({all_notas})
-    return ({"error":"notfound"})
+    #tabela = 'notas_fiscais_de_vendas'
+    #all_notas = next(JestorHausz.get_parametros_nfe(tabela))
+    strs = executa_select()
+    #print('aquiiiii - >',next(strs))
+    return jsonify(next(strs))
+
+@jestor_bp.route('/api/v1/jestor/pedidos/pedidositens/all', methods=['GET','POST'])
+def get_jestor_pedido_item_all() -> Response:
+    strs = executa_select()
+    if request.method == 'GET':
+        return jsonify(next(strs))
+
+    elif request.method == 'POST':
+        return jsonify(next(strs))
+    else:
+        abort(400)
+        
 
 
+''''
 @jestor_bp.route('/api/v1/jestor/pedidos/pedidositens/all', methods=['GET','POST'])
 def get_jestor_pedido_item_all() -> Response:
     """Consulta e Insere Pedidos no jestor"""
@@ -70,7 +84,7 @@ def get_jestor_pedido_item_all() -> Response:
         return "Error"
     return "Error"
    
-
+'''
 @jestor_bp.route('/api/v1/jestor/pedidos/pedidositens/<data>')
 def get_jestor_pedido_item_data(data: Any) -> Response:
     data = request.get_json()

@@ -1,6 +1,14 @@
-from ..extensions import db
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import DateTime
+
+
+from flask_sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy()
+def configure(app):
+    db.init_app(app)
+    app.db = db
+
 
 class NotaFiscal(db.Model):
     __tablename__ = "NotaFiscal"
@@ -93,5 +101,30 @@ class NotaFiscal(db.Model):
     def __repr__(self):
         return f"'Codigo -> Pedido'{self.CodigoPedido},'IdDoDestini - >' {self.IdDestino}"
 
+class NotaFiscalItens(db.Model):
+    __tablename__ = "NotaFiscalItens"
+    __bind_key__ = 'HauszMapa'
+    __table_args__ = {"schema": "Pedidos"}
+
+    IdItensNF = db.Column(db.Integer, primary_key=True)
+    IdNFe = db.Column(db.Integer)
+    CodigoProduto = db.Column(db.String)
+    EAN = db.Column(db.String)
+    Produto = db.Column(db.String)
+    NCM = db.Column(db.String)
+    CEST = db.Column(db.String)
+    CFOP = db.Column(db.String)
+    UnidadeComercial = db.Column(db.Float)
+    QuantidadeCompra = db.Column(db.Float)
+    ValorUnidComprada = db.Column(db.Float) 
+    ValorProduto = db.Column(db.Float) 
+    EANTributavel = db.Column(db.String)
+    UnidadeTributavel = db.Column(db.String)
+    QuantidadeTributavel = db.Column(db.Integer)
+    ValorUnidTributavel = db.Column(db.Float) 
+    indTot = db.Column(db.Boolean, unique=False, nullable=False)
+
+    def __repr__(self):
+        return f" CodigoNfe - >{self.IdNFe}, Quantidade - > {self.QuantidadeCompra}, CodigoProduto -> {self.CodigoProduto}"
 
 

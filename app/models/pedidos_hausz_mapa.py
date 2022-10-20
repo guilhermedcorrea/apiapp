@@ -2,9 +2,9 @@ from ..extensions import db
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import DateTime
 
+
 class PedidoFlexy(db.Model):
     __tablename__ = "PedidoFlexy"
-    __bind_key__ = 'HauszMapa'
     __table_args__ = {"schema": "Pedidos"}
     IdPedidoFlexy = db.Column(db.Integer, primary_key=True)
     IdOrcamento = db.Column(db.Integer)
@@ -47,10 +47,9 @@ class PedidoFlexy(db.Model):
     PrevisaoOriginal  = db.Column(db.DateTime, unique=False, nullable=False)
 
 
-    def __rpr__(self):
-        return f'{self.CodigoPedido}, {self.IdUnidade}'
 
 #Pedido Etapa Flexy
+'''
 class EtapaFlexy(db.Model):
     __tablename__ = "PedidoFlexy"
     __bind_key__ = 'HauszMapa'
@@ -67,10 +66,9 @@ class EtapaFlexy(db.Model):
 
     def __repr__(self):
         return f"idetapa - > {self.IdEtapa}, NomeEtapa - > {self.NomeEtapa}"
-
+'''
 class ItensFlexy(db.Model):
     __tablename__ = "ItensFlexy"
-    __bind_key__ = 'HauszMapa'
     __table_args__ = {"schema": "Pedidos"}
 
     IdPedidoItensFlexy = db.Column(db.Integer, primary_key=True)
@@ -110,8 +108,6 @@ class ItensFlexy(db.Model):
     CustoUnitario = db.Column(db.Float)
     IdStatusReserva = db.Column(db.Integer)
 
-    def __rpr__(self):
-        return f" CodigoPedido -> {self.CodigoPedido}, Quantidade -> {self.Quantidade}, Quantidade Caixa ->{self.QtdCaixa}, QuantidadeReservada - >{self.QuantidadeReservada}"
 
 
 

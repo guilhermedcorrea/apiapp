@@ -1,5 +1,11 @@
 
-from ..extensions import db
+from flask_sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy()
+def configure(app):
+    db.init_app(app)
+    app.db = db
+
 
 class UsersGroup(db.Model):
     __tablename__ = "UsersGroup"
@@ -24,7 +30,7 @@ class Users(db.Model):
     password_hash = db.Column(db.String)
     bitusuario = db.Column(db.Boolean, unique=False, nullable=False)
     bitlogado = db.Column(db.Boolean, unique=False, nullable=False)
-    datalogado = db.Column(db.Column(db.DateTime, unique=False, nullable=False)
+    datalogado = db.Column(db.Column(db.DateTime, unique=False, nullable=False))
     datacadastro = db.Column(db.Column(db.DateTime, unique=False, nullable=False))
     grupo = db.Column(db.String)
     status_login = db.Column(db.String)

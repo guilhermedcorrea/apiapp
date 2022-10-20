@@ -30,7 +30,25 @@ class Cliente(db.Model):
         return f"idcliente - > {self.IdCliente}, NomeCliente - >{self.NomeCliente}"
 
     
-
-
-
+class EnderecoPedidos(db.Model):
+    __tablename__ = "EnderecoPedidos"
+    __table_args__ = {"schema": "Pedidos"}
+    IdEndPedido = db.Column(db.Integer, primary_key=True)
+    CodigoPedido = db.Column(db.Integer)
+    IdCliente = db.Column(db.Integer)
+    Endereco = db.Column(db.String)
+    Numero = db.Column(db.String)
+    Bairro = db.Column(db.String)
+    Cep = db.Column(db.String)
+    Complemento = db.Column(db.String)
+    IdCidade = db.Column(db.Integer)
+    DataCadastro = db.Column(db.DateTime, unique=False, nullable=False)
+    InseridoPor = db.Column(db.String)
+    DataAlteracao = db.Column(db.DateTime, unique=False, nullable=False)
+    bitAtivo = db.Column(db.Boolean, unique=False, nullable=False)
+    AlteradoPor = db.Column(db.String)
+    Celular = db.Column(db.String)
+    Observacao = db.Column(db.String)
+    bitShowRoom = db.Column(db.Boolean, unique=False, nullable=False)
+    bitNumeroValido = db.Column(db.Boolean, unique=False, nullable=False)
 

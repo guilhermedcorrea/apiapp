@@ -1,39 +1,33 @@
 
 from flask import Flask
-from config import SQLALCHEMY_DATABASE_URI
 import os
-from .extensions import db, ma
-from flask import make_response, jsonify
 from flask_sqlalchemy import SQLAlchemy
-
-db = SQLAlchemy()
-def register_handlers(app):
-    if app.config.get('DEBUG') is True:
-        app.logger.debug('Errors-Exceptions')
-        return
+from config import SECRET_KEY, SQLALCHEMY_DATABASE_URI, SQLALCHEMY_BINDS
+from .extensions import db
 
 
-def create_app(test_config=None) -> Flask:
+#db = SQLAlchemy()
 
-    app = Flask(__name__, instance_relative_config=True)
-    if test_config is None:
-        app.config.from_mapping(
-            SECRET_KEY=os.getenv('UID'),
-            SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI,
-            SQLALCHEMY_TRACK_MODIFICATIONS=False,
-           
-        )
-    else:
-        app.config.from_mapping(test_config)
+def create_app() -> Flask:
+    app = Flask(__name__)
+    app.config['SECRET_KEY'] = SECRET_KEY
+    app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
+    app.config['SQLALCHEMY_BINDS'] = SQLALCHEMY_BINDS
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    app.config['SQLALCHEMY_POOL_SIZE'] = 370
+    app.config['SQLALCHEMY_MAX_OVERFLOW'] = 0
 
+
+   
     db.init_app(app)
+ 
    
     with app.app_context():
-        from .api.cadastra_nf import cadastro_bp
-        from .api.consulta_nf import consulta_bp
+        #from .api.cadastra_nf import cadastro_bp
+        #from .api.consulta_nf import consulta_bp
         from .api.jestor import jestor_bp
-        app.register_blueprint(cadastro_bp)
-        app.register_blueprint(consulta_bp)
+        #app.register_blueprint(cadastro_bp)
+        #app.register_blueprint(consulta_bp)
         app.register_blueprint(jestor_bp)
  
     return app
