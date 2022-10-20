@@ -53,7 +53,7 @@ COMPANY_ID_EMISSAO = os.getenv('COMPANY_ID_EMISSAO')
 @get_metodo
 def get_parametros(*args: tuple, **kwargs: Dict[str, Any]) -> None:
     """Docstring"""
-    print('Called example function')
+    print('Called function')
 
 
 @list_all_empresas
@@ -67,14 +67,22 @@ https://nfe.io/docs/desenvolvedores/rest-api/nota-fiscal-de-consumidor-v2/#/
 
 """
 
-@consulta_bp.route('/api/v2/list/companies/all', methods=['GET','POST'])
-def listas_nfs() -> Response:
+@consulta_bp.route('/api/v2/companies/list/empresas/all', methods=['GET','POST'])
+def listas_all_empresas() -> Response:
     try:
         jsons = get_list_empresas(api_key= API_KEY_EMISSAO)
         return make_response(jsonify(jsons)), 201
     except:
         abort(400)
 
+@consulta_bp.route('/api/v2/companies/list/nfe/all', methods=['GET','POST'])
+def consulta_nf():
+    try:
+        jsons = get_parametros(compani_id=COMPANY_ID_EMISSAO, api_key=API_KEY_EMISSAO)
+        return make_response(jsonify(jsons))
+    except:
+        abort(400)
+  
 
 
 '''

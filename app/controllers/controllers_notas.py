@@ -19,9 +19,9 @@ def get_metodo(f) -> Any:
     @wraps(f)
     def obtem_endpoint(*args: tuple, **kwargs: Dict[str, Any]) -> Any:
         print('Envia requisicao NFE IO CONSULTA | METODO GET')
-      
 
-        url = """https://api.nfse.io/v2/companies/{}/consumerinvoices?environment={}&apikey={}""".format(kwargs.get('compani_id'),kwargs.get('ambiente_nf'),kwargs.get('api_key'))
+      
+        url = """https://api.nfse.io/v2/companies/{}/productinvoices?environment=production&apikey={}""".format(kwargs.get('compani_id'), kwargs.get('api_key'))
         payload={}
         headers = {}
 
