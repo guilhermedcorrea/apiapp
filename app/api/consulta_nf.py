@@ -44,7 +44,6 @@ NOTA FISCAL CONSUMIDOR
 """
 load_dotenv()
 
-load_dotenv()
 
 API_KEY_CONSULTA = os.getenv('API_KEY_CONSULTA')
 COMPANY_ID_CONSULTA = os.getenv('COMPANY_ID_CONSULTA')

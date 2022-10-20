@@ -47,4 +47,79 @@ class PedidoFlexy(db.Model):
     PrevisaoOriginal  = db.Column(db.DateTime, unique=False, nullable=False)
 
 
+    def __rpr__(self):
+        return f'{self.CodigoPedido}, {self.IdUnidade}'
+
+#Pedido Etapa Flexy
+class EtapaFlexy(db.Model):
+    __tablename__ = "PedidoFlexy"
+    __bind_key__ = 'HauszMapa'
+    __table_args__ = {"schema": "Pedidos"}
+
+    IdEtapa = db.Column(db.Integer, primary_key=True)
+    NomeEtapa = db.Column(db.String)
+    bitAtivo = db.Column(db.Boolean, unique=False, nullable=False)
+    DataInserido = db.Column(db.DateTime, unique=False, nullable=False)
+    InseridoPor = db.Column(db.String)
+    CodigoStatusJet = db.Column(db.String)
+    NameStatusJet = db.Column(db.String)
+    IdStatus = db.Column(db.Integer)
+
+    def __repr__(self):
+        return f"idetapa - > {self.IdEtapa}, NomeEtapa - > {self.NomeEtapa}"
+
+class ItensFlexy(db.Model):
+    __tablename__ = "ItensFlexy"
+    __bind_key__ = 'HauszMapa'
+    __table_args__ = {"schema": "Pedidos"}
+
+    IdPedidoItensFlexy = db.Column(db.Integer, primary_key=True)
+    CodigoPedido = db.Column(db.Integer)
+    Quantidade = db.Column(db.Float)
+    QuantidadeReservada = db.Column(db.Float)
+    QtdCaixa = db.Column(db.Float)
+    PrecoUnitario = db.Column(db.Float)
+    IdProduto = db.Column(db.Integer)
+    SKU = db.Column(db.String)
+    CodigoReferencia = db.Column(db.String)
+    IdEndEntregaFlexy = db.Column(db.Integer)
+    PrevisaoColeta = db.Column(db.DateTime, unique=False, nullable=False)
+    EntregaDiaMinimo = db.Column(db.DateTime, unique=False, nullable=False)
+    EntregaDiaMaximo = db.Column(db.DateTime, unique=False, nullable=False)
+    DataMinimaEntrega = db.Column(db.DateTime, unique=False, nullable=False)
+    DataMaximaEntrega = db.Column(db.DateTime, unique=False, nullable=False)
+    LocalEstoque = db.Column(db.Integer)
+    Transportador = db.Column(db.Integer)
+    Observacoes = db.Column(db.String)
+    IdPromocaoFlexy = db.Column(db.Integer)
+    MvaOriginal = db.Column(db.Float)
+    MvaAjustado = db.Column(db.Float)
+    AliquotaInterna = db.Column(db.Float)
+    AliquotaExterna = db.Column(db.Float)
+    TaxaFrete = db.Column(db.Float)
+    IPI = db.Column(db.Float)
+    IdPropriedadesPedidoFlexy =db.Column(db.Integer)
+    IdEstoque = db.Column(db.Integer)
+    CodigoPedidoCompra = db.Column(db.Integer)
+    DescontoItem = db.Column(db.Float)
+    PrecoUnitarioDescontado = db.Column(db.Float)
+    DataInserido = db.Column(db.DateTime, unique=False, nullable=False)
+    bitAtivo = db.Column(db.Boolean, unique=False, nullable=False)
+    CodigoPedidoCompra2 = db.Column(db.Integer)
+    PedidoPai = db.Column(db.Integer)
+    CustoUnitario = db.Column(db.Float)
+    IdStatusReserva = db.Column(db.Integer)
+
+    def __rpr__(self):
+        return f" CodigoPedido -> {self.CodigoPedido}, Quantidade -> {self.Quantidade}, Quantidade Caixa ->{self.QtdCaixa}, QuantidadeReservada - >{self.QuantidadeReservada}"
+
+
+
+
+
+
+
+
+
+
 
