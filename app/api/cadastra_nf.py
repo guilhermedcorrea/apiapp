@@ -4,9 +4,12 @@ from flask import (Blueprint, Request, jsonify
 from flask_marshmallow import Marshmallow
 from sqlalchemy import text
 from itertools import chain
-from ..controllers.controllers_hausz import PedidosComprasHausz
+from ..controllers.controllers_hausz_mapa import executa_select
+from ..controllers.controllers_notas import emissao_nfe
 import os
 from dotenv import load_dotenv
+import json
+from typing import Dict, Tuple, List, Any
 
 
 def register_handlers(app):
@@ -51,18 +54,23 @@ Emissao notas ficais
 https://nfe.io/docs/desenvolvedores/rest-api/nota-fiscal-de-produto-v2/#/
 """
 
+@emissao_nfe
+def notas_fiscais(*args: tuple, **kwargs: Dict[str, Any]) -> None:
+    """Docstring"""
+    print('Called function')
+
 
 
 @cadastro_bp.route("/api/v1/companies/emissao/", methods=['GET','POST'])
 def cadastra_notas() -> Response:
-    try:
-        valores = request.get_json()
-        print(valores)
-        #pedidos = get_pedidos_flexy()
-        #pedido = [x for x in next(pedidos)]
-        return jsonify({"nf":'emissao'}), 201
-    except:
-        abort(400)
+    dados_pedido = executa_select()
+    for pedidos in dados_pedido:
+        print(pedidos)
+
+    #nf = notas_fiscais()
+
+    return 'teste'
+   
 
     
 @cadastro_bp.route("/api/v1/companies/cancelamento/", methods=['GET','POST'])

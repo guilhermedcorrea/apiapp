@@ -1,10 +1,9 @@
-from typing import Any
 from functools import wraps
 import os
 from dotenv import load_dotenv
 import requests
-
-from typing import Dict, Tuple, List
+import json
+from typing import Dict, Tuple, List, Any
 
 """
 NOTA FISCAL CONSUMIDOR
@@ -32,6 +31,39 @@ def get_metodo(f) -> Any:
         return jsons
         
     return obtem_endpoint
+
+
+def emissao_nfe(f) -> Any:
+    @wraps(f)
+    def emissao_notas_fiscais(*args: tuple, **kwargs: Dict[str, Any]) -> Any:
+
+        print('emissao notas fiscais ')
+
+        url = "https://api.nfse.io/v2/companies/acd0c1c8f5a1486592c6ed80d94e2bb7/productinvoices/"
+
+        payload = json.dumps({
+        "buyer": {
+            "name": "Teste NF TESTE","tradeName": "Comprador Nome Comercial","address": {"city": {"code": "1751488","name": "Marilia"
+            },"state": "SP","district": "distrito","street": "Alameda Madri","postalCode": "1751488","number": "555","country": "BRA"},
+            "federalTaxNumber": 99999999999999
+        },
+        "items": [{"code": "20968A","unitAmount": 87.9,"quantity": 33.9,"cfop": 5102, "ncm": "69072100","codeGTIN": "7894287914364",
+            "codeTaxGTIN": "7894287914364","tax": {"totalTax": 6,"icms": {"csosn": "102","origin": "0"},"pis": { "amount": 0,"rate": 0,"baseTax": 208,          "cst": "08"
+                },"cofins": {"amount": 0,"rate": 0,"baseTax": 208,"cst": "08"}},"cest": "","description": "TESTE DE PRODUTO - WITMOB"
+            }]})
+        headers = {
+        'Authorization': 't0StUhoH4JiSN72ehwrhq3nQ27gRDTSJGt2W98rDXilRTwhNoJAiGtM9WUcl9MscjjW',
+        'Content-Type': 'application/json'
+        }
+
+        response = requests.request("POST", url, headers=headers, data=payload)
+
+        print(response.status_code)
+ 
+        return response.json()
+        
+    return emissao_notas_fiscais
+
 
 @get_metodo
 def get_parametros(*args: tuple, **kwargs: Dict[str, Any]) -> None:
