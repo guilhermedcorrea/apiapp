@@ -4,12 +4,14 @@ from flask import (Blueprint, Request, jsonify
 from flask_marshmallow import Marshmallow
 from sqlalchemy import text
 from itertools import chain
-from ..controllers.controllers_hausz_mapa import executa_select
 from ..controllers.controllers_notas import emissao_nfe
 import os
 from dotenv import load_dotenv
 import json
-from typing import Dict, Tuple, List, Any
+from typing import Dict, Tuple, List, Literal, Any
+from ..controllers.controllers_hausz_mapa import executa_select
+from ..extensions import db
+from itertools import groupby
 
 
 def register_handlers(app):
@@ -58,23 +60,52 @@ def notas_fiscais(*args: tuple, **kwargs: Dict[str, Any]) -> None:
     """Docstring"""
     print('Called function')
 
+
+def group_keys(key):
+    return key['CodigoPedido']
+
+
+#convert(date,getdate()
+#teste funcao
+
+def verifica_dict(dict_items) -> (dict | Literal['erro'] | None):
+    match dict_items:
+        case dict_items if len(dict_items) >1:
+            for items in dict_items:
+                return {items.get('CodigoPedido'):items}
+        case dict_items if len(dict_items) ==1:
+            for items in dict_items:
+                return {items.get('CodigoPedido'):items}
+        case _:
+            return "erro"
+
+
 @cadastro_bp.route("/api/v1/companies/emissao/", methods=['GET','POST'])
 def cadastra_notas() -> Response:
-    dados_pedido = executa_select()
-    for pedidos in dados_pedido:
-        for pedido in pedidos:
+    lista_pedidos = []
+    with db.engine.connect() as conn:
+        query = (text("""
+            SELECT DISTINCT *FROM [HauszMapa].[Pedidos].[PedidoFlexy] AS PFLEXY
+            JOIN [HauszMapa].[Pedidos].[EnderecoPedidos]AS EPEDIDO
+            ON EPEDIDO.Idcliente = PFLEXY.IdCliente
+            WHERE convert(date,PFLEXY.[DataInserido])  =  '2022-10-18'
+            AND PFLEXY.StatusPedido ='Em separação'"""))
+        teste = conn.execute(query).all()
+      
+        query_dicts = [{key: value for (key, value) in row.items()} for row in teste]
+        for pedidos in query_dicts:
+          
+            jsons = executa_select(pedido = pedidos.get('CodigoPedido'))
+            dict_items = next(chain(jsons))
+            #print(dict_items)
+            dict_items = sorted(dict_items, key=group_keys)
+        
+            for key, value in groupby(dict_items, group_keys):
+                #cont = len(list(value))
+                dicts = verifica_dict(list(value))
+                lista_pedidos.append(dicts)
 
-            """Metodo recebe parametros pedido e emite NF"""
-           
-            emissao_nf = notas_fiscais(pedido.get('CodigoPedido'), pedido.get('EAN'), pedido.get('NCM'), pedido.get('CEST')
-                , pedido.get('SKU'), pedido.get('Quantidade'), pedido.get('PrecoUnitario'), pedido.get('IPI')
-                , pedido.get('nomecidadecliente'), pedido.get('nomestadocliente'), pedido.get('Endereco'), pedido.get('Complemento')
-                , pedido.get('Cep'), pedido.get('Numero'))
-
-            if emissao_nf:
-                return jsonify({"NFE":"EMITIDA"}), 201
-           
-    return "teste"
+    return make_response(jsonify(lista_pedidos))
 
 @cadastro_bp.route("/api/v1/companies/cancelamento/", methods=['GET','POST'])
 def cancela_nota() -> Response:

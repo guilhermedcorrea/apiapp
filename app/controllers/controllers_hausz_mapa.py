@@ -14,8 +14,8 @@ def executa_select(*args, **kwargs):
             exec_produtos = conn.execute(exec)
             query_dicts = [{key: value for (key, value) in row.items()} for row in exec_produtos]
             yield query_dicts
-        except:
-            print("error")
+        except Exception as e:
+            print(e)
 
       
        
