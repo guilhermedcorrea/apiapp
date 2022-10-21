@@ -22,7 +22,7 @@ def converte_float(valores):
     try:
         num = str(valores).replace("."
                 ,"").replace(",",".").strip()
-        return float(num)
+        return round(float(num),2)
     except:
         return float(0)
 
@@ -51,37 +51,45 @@ def emissao_nfe(f) -> Any:
     def emissao_notas_fiscais(*args: tuple, **kwargs: Dict[str, Any]) -> Any:
         for listas in args:
             for items in listas:
+                ValorTotal = converte_float(items.get('ValorTotal'))
+                QtdCaixa = converte_float(items.get('QtdCaixa'))
+                PrecoUnitario = converte_float(items.get('PrecoUnitario'))
+                Quantidade = converte_float(items.get('Quantidade'))
+                Desconto = converte_float(items.get('Desconto'))
+                DescontoItem = converte_float(items.get('DescontoItem'))
+
+                print('valor total -->',ValorTotal)
                 print(items.get('CodigoPedido'), items.get('IdCliente'),items.get('NomeCliente')
-                ,items.get('SKU'),items.get('QtdCaixa'),items.get('PrecoUnitario'), items.get('Quantidade')
+                ,items.get('SKU'),QtdCaixa,PrecoUnitario, Quantidade
                 ,items.get('EAN'), items.get('NCM'),items.get('Marca'), items.get('NomeProduto'),items.get('NomeCliente')
-                ,items.get('CpfCnpj'),items.get('ValorTotal'),items.get('Unidade')
+                ,items.get('CpfCnpj'),ValorTotal,items.get('Unidade')
                 ,items.get('RazaoSocialFranquiaVenda'),items.get('Bairro'),items.get('Celular')
                 ,items.get('Cep'),items.get('Complemento'),items.get('Endereco')
-                ,items.get('Desconto'), items.get('DescontoItem'),items.get('Nome'),items.get('Uf'))
-                        
+                ,Desconto, DescontoItem,items.get('Nome'),items.get('Uf'),items.get('Numero'))
+                    
         print('emissao notas fiscais ')
-        '''
-        url = """https://api.nfse.io/v2/companies/{COMPANY_ID_EMISSAO}/productinvoices/""".format(COMPANY_ID_EMISSAO)
+     
+        url = """https://api.nfse.io/v2/companies/{}/productinvoices/""".format(kwargs.get('COMPANY_ID_EMISSAO'))
 
         payload = json.dumps({
         "buyer": {
-            "name": "Teste NF TESTE","tradeName": "Comprador Nome Comercial","address": {"city": {"code": "1751488","name": "Marilia"
-            },"state": "SP","district": "distrito","street": "Alameda Madri","postalCode": "1751488","number": "555","country": "BRA"},
+            "name": f"{items.get('NomeCliente')}","tradeName": f"{items.get('NomeCliente')}","address": {"city": {"code": f"{items.get('Cep')}","name": f"{items.get('Nome')}"
+            },"state": f"{items.get('Uf')}","district": "distrito","street": f"{items.get('Endereco')}","postalCode": f"{items.get('Cep')}","number": f"{items.get('Numero')}","country": "BRA"},
             "federalTaxNumber": 99999999999999
         },
-        "items": [{"code": "20968A","unitAmount": 87.9,"quantity": 33.9,"cfop": 5102, "ncm": "69072100","codeGTIN": "7894287914364",
-            "codeTaxGTIN": "7894287914364","tax": {"totalTax": 6,"icms": {"csosn": "102","origin": "0"},"pis": { "amount": 0,"rate": 0,"baseTax": 208,          "cst": "08"
-                },"cofins": {"amount": 0,"rate": 0,"baseTax": 208,"cst": "08"}},"cest": "","description": "TESTE DE PRODUTO - WITMOB"
+        "items": [{"code": f"{items.get('SKU')}","unitAmount": 87.9,"quantity": f"{Quantidade}","cfop": 5102, "ncm": f"{items.get('NCM')}","codeGTIN": f"{items.get('EAN')}",
+            "codeTaxGTIN": f"{items.get('EAN')}","tax": {"totalTax": 6,"icms": {"csosn": "102","origin": "0"},"pis": { "amount": 0,"rate": 0,"baseTax": 208,          "cst": "08"
+                },"cofins": {"amount": 0,"rate": 0,"baseTax": 208,"cst": "08"}},"cest": "","description": f"{items.get('NomeCliente')}"
             }]})
         headers = {
-        'Authorization': f'{API_KEY_EMISSAO}',
+        'Authorization': f"{kwargs.get('API_KEY_EMISSAO')}",
         'Content-Type': 'application/json'
         }
 
         response = requests.request("POST", url, headers=headers, data=payload)
 
         print(response.status_code)
-        '''
+      
         #return response.json()
         return 'teste'
         

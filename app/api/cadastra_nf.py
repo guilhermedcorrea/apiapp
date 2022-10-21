@@ -110,7 +110,7 @@ def cadastra_notas() -> Response:
                 dicts.update(pedidos)
                 lista_pedidos.append(dicts)
     
-    emissao_nf(lista_pedidos)
+    emissao_nf(lista_pedidos,API_KEY_EMISSAO,COMPANY_ID_EMISSAO)
     return make_response(jsonify({'EmitindoNFE':lista_pedidos})),201
 
 @cadastro_bp.route("/api/v1/companies/cancelamento/", methods=['GET','POST'])
