@@ -61,7 +61,7 @@ def notas_fiscais(*args: tuple, **kwargs: Dict[str, Any]) -> None:
     print('Called function')
 
 
-def group_keys(key):
+def group_keys(key) -> Any:
     return key['CodigoPedido']
 
 
@@ -82,7 +82,7 @@ def verifica_dict(dict_items) -> (dict | Literal['erro'] | None):
 
 @cadastro_bp.route("/api/v1/companies/emissao/", methods=['GET','POST'])
 def cadastra_notas() -> Response:
-    lista_pedidos = []
+    lista_pedidos: list[dict[str, str]] = []
     with db.engine.connect() as conn:
         query = (text("""
             SELECT DISTINCT *FROM [HauszMapa].[Pedidos].[PedidoFlexy] AS PFLEXY
@@ -114,7 +114,6 @@ def cancela_nota() -> Response:
         return jsonify({"CANCELANF":id_nf}),201
     except:
         abort(400)
-
 
 @cadastro_bp.route("/api/v1/companies/cartacorrecao/", methods=['GET','POST'])
 def carta_correcao() -> Response:
