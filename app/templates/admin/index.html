@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard | Notas Fiscais{% endblock %}
+
+{% block body %}
+<div class="row pad">
+	<div class="col-lg-12">
+		<div class="panel panel-default">
+			<div class="panel-body text-center">
+				<h3 class="bold"><i class="glyphicon glyphicon-dashboard"></i> Admin Dashboard</h3>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-12">
+		<ul class="summary">
+			<li class="">Notas Fiscais <span class="badge">5</span></li>
+			<li class="">Emitidas com exito <span class="badge">3</span></li>
+			<li class="">Notas Erro <span class="badge"></span></li>
+			<li class="">Divergencia<span class="badge"></span></li>
+			<li class="">Emitir <span class="badge"></span></li>
+		</ul>
+	</div>
+</div>
+<div class="row pad">
+	<div class="col-lg-6 pad">
+		<div class="panel panel-danger">
+			<div class="panel-heading">
+				<h3 class="panel-title">Notas Fiscais</h3>
+			</div>
+			<div class="panel-body">
+				Orders that have not been fully completed
+			</div>
+			<div class="table-responsive">
+				<table class="table table-striped table-bordered">
+					<thead>
+						<tr>
+							<th>IDNOTA</th><th>PEDIDO</th><th>TIPONOTA</th><th>VALOR</th><th>STATUS</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>1</td>
+							<td><a href="./view-order.html">123</a></td>
+							<td>Venda</td>
+							<td>50.99</td>
+							<td><span class="badge">Aguardando</span></td>
+						</tr>
+						<tr>
+							<td>1</td>
+							<td><a href="./view-order.html">123</a></td>
+							<td>Venda</td>
+							<td>50.99</td>
+							<td><span class="badge">Aguardando</span></td>
+						</tr>
+						<tr>
+							<td>1</td>
+							<td><a href="./view-order.html">123</a></td>
+							<td>Venda</td>
+							<td>50.99</td>
+							<td><span class="badge">Aguardando</span></td>
+						</tr>
+						<tr>
+							<td>1</td>
+							<td><a href="./view-order.html">123</a></td>
+							<td>Venda</td>
+							<td>50.99</td>
+							<td><span class="badge">Aguardando</span></td>
+						</tr>
+						<tr>
+							<td>1</td>
+							<td><a href="./view-order.html">123</a></td>
+							<td>Venda</td>
+							<td>50.99</td>
+							<td><span class="badge">Aguardando</span></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-lg-6 pad">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">Notas Com Erro</h3>
+			</div>
+			<div class="panel-body">
+				Notas com Erro ou canceladas
+			</div>
+			<div class="table-responsive">
+				<table class="table table-striped table-bordered">
+					<thead>
+						<tr>
+							<th>#</th><th>REFNOTA</th><th>VALOR</th><th>STATUS</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for product in products %}
+						<tr>
+							<td>{{ product.id }}</td>
+							<td>{{ product.name }}</td>
+							<td>&dollar;{{ product.price / 100 }}</td>
+							<td>{{ product.stock }} units</td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

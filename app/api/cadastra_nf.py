@@ -1,4 +1,3 @@
-
 from flask import (Blueprint, Request, jsonify
     , make_response, Response, redirect, current_app, request,abort)
 from flask_marshmallow import Marshmallow
@@ -65,7 +64,6 @@ def emissao_nf(*args: tuple, **kwargs: dict[str, Any]) -> dict[str, Any]:
 def group_keys(key) -> Any:
     return key['CodigoPedido']
 
-
 #convert(date,getdate()
 #teste funcao
 
@@ -81,7 +79,7 @@ def verifica_dict(dict_items) -> (dict | Literal['erro'] | None):
             return "erro"
 
 
-@cadastro_bp.route("/api/v1/companies/emissao/", methods=['GET','POST'])
+@cadastro_bp.route("/api/v2/companies/emissao/", methods=['GET','POST'])
 def cadastra_notas() -> Response:
     lista_pedidos: list[dict[str, str]] = []
     with db.engine.connect() as conn:
@@ -113,7 +111,24 @@ def cadastra_notas() -> Response:
     emissao_nf(lista_pedidos,API_KEY_EMISSAO,COMPANY_ID_EMISSAO)
     return make_response(jsonify({'EmitindoNFE':lista_pedidos})),201
 
-@cadastro_bp.route("/api/v1/companies/cancelamento/", methods=['GET','POST'])
+@cadastro_bp.route("/api/v2/companies/emissao/<pedido>", methods=['GET','POST'])
+def cadastra_nota_referencia(pedido):
+
+    jsons = executa_select(pedido = int(pedido))
+    dict_items = next(chain(jsons))
+          
+    #dict_items = sorted(dict_items, key=group_keys)
+    #for key, value in groupby(dict_items, group_keys):
+
+    #    dicts = verifica_dict(next(value))
+        #pedido_nf = emissao_nf(dicts,API_KEY_EMISSAO,COMPANY_ID_EMISSAO)
+    print(dict_items)
+    pedido_nf = emissao_nf(dict_items,API_KEY_EMISSAO,COMPANY_ID_EMISSAO)
+    return make_response(jsonify(dict_items)),201
+   
+
+
+@cadastro_bp.route("/api/v2/companies/cancelamento/", methods=['GET','POST'])
 def cancela_nota() -> Response:
     id_nf  = request.get_json()
     try:
@@ -121,7 +136,7 @@ def cancela_nota() -> Response:
     except:
         abort(400)
 
-@cadastro_bp.route("/api/v1/companies/cartacorrecao/", methods=['GET','POST'])
+@cadastro_bp.route("/api/v2/companies/cartacorrecao/", methods=['GET','POST'])
 def carta_correcao() -> Response:
     id_nf  = request.get_json()
     try:
