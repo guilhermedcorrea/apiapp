@@ -14,6 +14,7 @@ from ..extensions import db
 from itertools import groupby
 
 
+
 def register_handlers(app):
     if current_app.config.get('DEBUG') is True:
         current_app.logger.debug('Errors')
@@ -55,10 +56,10 @@ Emissao notas ficais
 https://nfe.io/docs/desenvolvedores/rest-api/nota-fiscal-de-produto-v2/#/
 """
 
+
 @emissao_nfe
-def notas_fiscais(*args: tuple, **kwargs: Dict[str, Any]) -> None:
-    """Docstring"""
-    print('Called function')
+def emissao_nf(*args: tuple, **kwargs: dict[str, Any]) -> dict[str, Any]:
+    print(args, kwargs)
 
 
 def group_keys(key) -> Any:
@@ -72,10 +73,10 @@ def verifica_dict(dict_items) -> (dict | Literal['erro'] | None):
     match dict_items:
         case dict_items if len(dict_items) >1:
             for items in dict_items:
-                return {items.get('CodigoPedido'):items}
+                return items
         case dict_items if len(dict_items) ==1:
             for items in dict_items:
-                return {items.get('CodigoPedido'):items}
+                return items
         case _:
             return "erro"
 
@@ -88,6 +89,10 @@ def cadastra_notas() -> Response:
             SELECT DISTINCT *FROM [HauszMapa].[Pedidos].[PedidoFlexy] AS PFLEXY
             JOIN [HauszMapa].[Pedidos].[EnderecoPedidos]AS EPEDIDO
             ON EPEDIDO.Idcliente = PFLEXY.IdCliente
+            JOIN [HauszMapa].[Cadastro].[Cidade] as ccidade
+            ON ccidade.IdCidade = EPEDIDO.IdCidade
+            JOIN [HauszMapa].[Cadastro].[Estado] as cestado
+            ON cestado.IdEstado = ccidade.IdEstado
             WHERE convert(date,PFLEXY.[DataInserido])  =  '2022-10-18'
             AND PFLEXY.StatusPedido ='Em separação'"""))
         teste = conn.execute(query).all()
@@ -99,13 +104,14 @@ def cadastra_notas() -> Response:
             dict_items = next(chain(jsons))
             #print(dict_items)
             dict_items = sorted(dict_items, key=group_keys)
-        
             for key, value in groupby(dict_items, group_keys):
                 #cont = len(list(value))
                 dicts = verifica_dict(list(value))
+                dicts.update(pedidos)
                 lista_pedidos.append(dicts)
-
-    return make_response(jsonify(lista_pedidos))
+    
+    emissao_nf(lista_pedidos)
+    return make_response(jsonify({'EmitindoNFE':lista_pedidos})),201
 
 @cadastro_bp.route("/api/v1/companies/cancelamento/", methods=['GET','POST'])
 def cancela_nota() -> Response:
