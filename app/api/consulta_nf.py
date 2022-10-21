@@ -12,7 +12,7 @@ from sqlalchemy import text
 from datetime import datetime
 from itertools import chain
 from ..controllers.controllers_hausz_mapa import executa_select
-
+from itertools import groupby
 
 
 def register_handlers(app):
@@ -91,6 +91,9 @@ def consulta_nf():
     except:
         abort(400)
   
+def group_keys(key):
+    return key['CodigoPedido']
+
 #teste funcao
 @consulta_bp.route("/api/v1/teste", methods=['GET','POST'])
 def retorna_teste():
@@ -107,7 +110,13 @@ def retorna_teste():
         for pedidos in query_dicts:
       
             jsons = executa_select(pedido = pedidos.get('CodigoPedido'))
-            dict_items = next(chain.from_iterable(jsons))
+            dict_items = next(chain(jsons))
+            dict_items = sorted(dict_items, key=group_keys)
+ 
+            for key, value in groupby(dict_items, group_keys):
+                print(key)
+                print(list(value))
+            '''
             dict_items.update(pedidos)
             dict_pedidos = {}
             dict_pedidos['CodigoPedido'] = dict_items.get('CodigoPedido')
@@ -162,7 +171,7 @@ def retorna_teste():
             dict_pedidos['Complemento'] =  dict_items.get('Complemento')
             dict_pedidos['Observacao'] =  dict_items.get('Observacao')
             dict_pedidos['bitShowRoom'] =  dict_items.get('bitShowRoom')
-            
+            '''
           
 
             return jsonify({dict_items.get('CodigoPedido'):dict_items})
