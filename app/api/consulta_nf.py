@@ -91,7 +91,7 @@ def consulta_nf():
     except:
         abort(400)
   
-
+#teste funcao
 @consulta_bp.route("/api/v1/teste", methods=['GET','POST'])
 def retorna_teste():
     lista_pedidos = []
