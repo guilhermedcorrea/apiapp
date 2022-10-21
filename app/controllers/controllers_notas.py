@@ -34,7 +34,6 @@ def get_metodo(f) -> Any:
         
     return obtem_endpoint
 
-
 def emissao_nfe(f) -> Any:
     @wraps(f)
     def emissao_notas_fiscais(*args: tuple, **kwargs: Dict[str, Any]) -> Any:
@@ -93,8 +92,6 @@ def list_all_empresas(f) -> Any:
         return jsons
         
     return obtem_endpoint
-
-
 
 
 class NotasHausz:

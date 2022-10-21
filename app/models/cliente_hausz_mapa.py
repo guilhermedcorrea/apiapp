@@ -52,3 +52,7 @@ class EnderecoPedidos(db.Model):
     bitShowRoom = db.Column(db.Boolean, unique=False, nullable=False)
     bitNumeroValido = db.Column(db.Boolean, unique=False, nullable=False)
 
+
+    def __repr__(self):
+        return f"CodigoPedido -> {self.CodigoPedido}"
+

@@ -1,14 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import DateTime
 
-
 from flask_sqlalchemy import SQLAlchemy
-
-db = SQLAlchemy()
-def configure(app):
-    db.init_app(app)
-    app.db = db
-
+from ..extensions import db
 
 class NotaFiscal(db.Model):
     __tablename__ = "NotaFiscal"

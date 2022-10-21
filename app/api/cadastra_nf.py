@@ -58,8 +58,6 @@ def notas_fiscais(*args: tuple, **kwargs: Dict[str, Any]) -> None:
     """Docstring"""
     print('Called function')
 
-
-
 @cadastro_bp.route("/api/v1/companies/emissao/", methods=['GET','POST'])
 def cadastra_notas() -> Response:
     dados_pedido = executa_select()
@@ -76,10 +74,7 @@ def cadastra_notas() -> Response:
             if emissao_nf:
                 return jsonify({"NFE":"EMITIDA"}), 201
            
-
     return "teste"
-
-
 
 @cadastro_bp.route("/api/v1/companies/cancelamento/", methods=['GET','POST'])
 def cancela_nota() -> Response:
