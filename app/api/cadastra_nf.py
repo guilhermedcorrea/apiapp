@@ -12,8 +12,6 @@ from ..controllers.controllers_hausz_mapa import executa_select
 from ..extensions import db
 from itertools import groupby
 
-
-
 def register_handlers(app):
     if current_app.config.get('DEBUG') is True:
         current_app.logger.debug('Errors')
@@ -54,7 +52,6 @@ COMPANY_ID_EMISSAO = os.getenv('COMPANY_ID_EMISSAO')
 Emissao notas ficais
 https://nfe.io/docs/desenvolvedores/rest-api/nota-fiscal-de-produto-v2/#/
 """
-
 
 @emissao_nfe
 def emissao_nf(*args: tuple, **kwargs: dict[str, Any]) -> dict[str, Any]:
@@ -126,7 +123,6 @@ def cadastra_nota_referencia(pedido):
     pedido_nf = emissao_nf(dict_items,API_KEY_EMISSAO,COMPANY_ID_EMISSAO)
     return make_response(jsonify(dict_items)),201
    
-
 
 @cadastro_bp.route("/api/v2/companies/cancelamento/", methods=['GET','POST'])
 def cancela_nota() -> Response:

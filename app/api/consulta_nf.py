@@ -52,22 +52,17 @@ NOTA FISCAL CONSUMIDOR
 """
 load_dotenv()
 
-
-
 API_KEY_EMISSAO = os.getenv('API_KEY_EMISSAO')
 COMPANY_ID_EMISSAO = os.getenv('COMPANY_ID_EMISSAO')
-
 
 @get_metodo
 def get_parametros(*args: tuple, **kwargs: Dict[str, Any]) -> None:
     """Docstring"""
     print('Called function')
 
-
 @list_all_empresas
 def get_list_empresas(*args: tuple, **kwargs: Dict[str, Any]) -> None:
     print("teste")
-
 
 """
 Lista notas
@@ -90,11 +85,6 @@ def consulta_nf():
         return make_response(jsonify(jsons))
     except:
         abort(400)
-  
-
-
-
-
 
 '''
 @consulta_bp.route('/api/v1/companies/consumerinvoices/<consumer_invoice_id>', methods=['GET','POST'])

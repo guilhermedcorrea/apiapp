@@ -19,11 +19,9 @@ API_KEY_EMISSAO = os.getenv('API_KEY_EMISSAO')
 COMPANY_ID_EMISSAO = os.getenv('COMPANY_ID_EMISSAO')
 
 
-
 @current_app.errorhandler(404)
 def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
-
 
 def converte_float(valores):
     try:
@@ -78,7 +76,6 @@ def emissao_nfe(f) -> Any:
    
         #for arg in args:
         #    print(arg['UFranquiaVenda'])
-   
      
                 url = """https://api.nfse.io/v2/companies/{}/productinvoices/""".format(kwargs.get('COMPANY_ID_EMISSAO'))
                 try:
