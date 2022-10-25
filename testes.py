@@ -1,57 +1,102 @@
+from flask import Flask
+import os
+from flask_sqlalchemy import SQLAlchemy
+from config import SECRET_KEY, SQLALCHEMY_DATABASE_URI, SQLALCHEMY_BINDS
+from sqlalchemy import func, select
+
+
+app = Flask(__name__)
+app.config['SECRET_KEY'] = SECRET_KEY
+app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
+app.config['SQLALCHEMY_BINDS'] = SQLALCHEMY_BINDS
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config['SQLALCHEMY_POOL_SIZE'] = 370
+app.config['SQLALCHEMY_MAX_OVERFLOW'] = 0
+
+
+db = SQLAlchemy(app)
+
+class PedidoFlexy(db.Model):
+    __tablename__ = "PedidoFlexy"
+    __table_args__ = {"schema": "Pedidos"}
+    IdPedidoFlexy = db.Column(db.Integer, primary_key=True)
+    IdOrcamento = db.Column(db.Integer)
+    CodigoPedido = db.Column(db.Integer)
+    PrecoFrete = db.Column(db.DateTime, unique=False, nullable=False)
+    StatusPedido = db.Column(db.String)
+    IdPromocaoFlexy = db.Column(db.Integer)
+    IdCliente = db.Column(db.Integer)
+    IdColaborador = db.Column(db.Integer)
+    Comissao = db.Column(db.DateTime, unique=False, nullable=False)
+    IdUnidade = db.Column(db.Integer)
+    IdFormaPagamento = db.Column(db.Integer)
+    IdAtributo = db.Column(db.Integer)
+    ValorTotal = db.Column(db.DateTime, unique=False, nullable=False)
+    IdEtapaFlexy = db.Column(db.Integer)
+    Desconto = db.Column(db.DateTime, unique=False, nullable=False)
+    ValorEntrada = db.Column(db.DateTime, unique=False, nullable=False)
+    DataInserido = db.Column(db.DateTime, unique=False, nullable=False)
+    BitSplit = db.Column(db.Boolean, unique=False, nullable=False)
+    BitOmie = db.Column(db.Boolean, unique=False, nullable=False)
+    CodPedidoOmie = db.Column(db.String)
+    NumPedidoOmie = db.Column(db.String)
+    ValorTotalDescontado = db.Column(db.Float)
+    Split = db.Column(db.Float)
+    Margem =  db.Column(db.Float)
+    WmsEtapa = db.Column(db.Integer)
+    DataInseridoOmie = db.Column(db.DateTime, unique=False, nullable=False)
+    NumPedidoFornecedor = db.Column(db.String)
+    PedidoPai = db.Column(db.Integer)
+    PrevisaoEntrega = db.Column(db.DateTime, unique=False, nullable=False)
+    bitDesconto = db.Column(db.Boolean, unique=False, nullable=False)
+    bitAtualizadoStatus = db.Column(db.Boolean, unique=False, nullable=False)
+    NomePedido = db.Column(db.String)
+    OrigemPedido = db.Column(db.String)
+    DesmPedido = db.Column(db.Integer)
+    IdEspecialista = db.Column(db.Integer)
+    IdOrderJet = db.Column(db.Integer)
+    IdSistema = db.Column(db.Integer)
+    IdCardJestor = db.Column(db.Integer)
+    PrevisaoOriginal  = db.Column(db.DateTime, unique=False, nullable=False)
+
+
 '''
-            dict_items.update(pedidos)
-            dict_pedidos = {}
-            dict_pedidos['CodigoPedido'] = dict_items.get('CodigoPedido')
-            dict_pedidos['IdCliente'] = dict_items.get('IdCliente')
-            dict_pedidos['IdPedidoFlexy'] = dict_items.get('IdPedidoFlexy')
-            dict_pedidos['NomeCliente'] = dict_items.get('NomeCliente')
-            dict_pedidos['IdFormaPagamento'] = dict_items.get('IdFormaPagamento')
-            dict_pedidos['IdEtapaFlexy'] = dict_items.get('IdEtapaFlexy')
-            dict_pedidos['StatusPedido'] = dict_items.get('StatusPedido')
-            dict_pedidos['Transportador'] = dict_items.get('')
-            dict_pedidos['IdUnidade'] = dict_items.get('Transportador')
-            dict_pedidos['Franquia'] = dict_items.get('FranquiaRealizouVenda')
-            dict_pedidos['IdFranquiaVenda'] = dict_items.get('IdFranquiaVenda')
-            dict_pedidos['IdProduto'] = dict_items.get('IdProduto')
-            dict_pedidos['SKU'] = dict_items.get('SKU')
-            dict_pedidos['Quantidade'] = dict_items.get('Quantidade')
-            dict_pedidos['QuantidadeReservada'] =dict_items.get('QuantidadeReservada')
-            dict_pedidos['NomeProduto'] =dict_items.get('NomeProduto')
-            dict_pedidos['EAN'] = dict_items.get('EAN')
-            dict_pedidos['NCM'] = dict_items.get('NCM')
-            dict_pedidos['CEST'] = dict_items.get('CEST')
-            dict_pedidos['Marca'] = dict_items.get('Marca')
-            dict_pedidos['IdMarca'] = dict_items.get('IdMarca')
-            dict_pedidos['PesoCubado'] =  dict_items.get('PesoCubado')
-            dict_pedidos['Peso'] =  dict_items.get('Peso')
-            dict_pedidos['TamanhoBarra'] =  dict_items.get('TamanhoBarra')
-            dict_pedidos['Unidade'] =  dict_items.get('Unidade')
-            dict_pedidos['FatorVenda'] =  dict_items.get('FatorVenda')
-            dict_pedidos['FatorMultiplicador'] =  dict_items.get('FatorMultiplicador')
-            dict_pedidos['FatorUnitario'] =  dict_items.get('FatorUnitario')
-            dict_pedidos['Garantia'] =  dict_items.get('Garantia')
-            dict_pedidos['Comprimento'] =  dict_items.get('Comprimento')
-            dict_pedidos['Largura'] =  dict_items.get('Largura')
-            dict_pedidos['Altura'] =  dict_items.get('Altura')
-            dict_pedidos['PrecoUnitario'] =  dict_items.get('PrecoUnitario')
-            dict_pedidos['MvaOriginal'] =  dict_items.get('MvaOriginal')
-            dict_pedidos['MvaAjustado'] =  dict_items.get('MvaAjustado')
-            dict_pedidos['AliquotaInterna'] =  dict_items.get('AliquotaInterna')
-            dict_pedidos['AliquotaExterna'] =  dict_items.get('AliquotaExterna')
-            dict_pedidos['TaxaFrete'] =  dict_items.get('TaxaFrete')
-            dict_pedidos['IPI'] =  dict_items.get('IPI')
-            dict_pedidos['IdCliente'] =  dict_items.get('IdCliente')
-            dict_pedidos['PrecoFrete'] =  dict_items.get('PrecoFrete')
-            dict_pedidos['Desconto'] =  dict_items.get('Desconto')
-            dict_pedidos['ValorEntrada'] =  dict_items.get('ValorEntrada')
-            dict_pedidos['DataInserido'] =  dict_items.get('DataInserido')
-            dict_pedidos['OrigemPedido'] =  dict_items.get('OrigemPedido')
-            dict_pedidos['EnderecoCliente'] =  dict_items.get('EnderecoCliente')
-            dict_pedidos['Numero'] =  dict_items.get('Numero')
-            dict_pedidos['Bairro'] =  dict_items.get('Bairro')
-            dict_pedidos['Cep'] =  dict_items.get('Cep')
-            dict_pedidos['Complemento'] =  dict_items.get('Complemento')
-            dict_pedidos['Observacao'] =  dict_items.get('Observacao')
-            dict_pedidos['bitShowRoom'] =  dict_items.get('bitShowRoom')
-            '''
+def testes():
+    with db.engine.connect() as conn:
+        transactions_data = conn.execute(select(func.strftime('%', PedidoFlexy.DataInserido)
+                    ,func.sum(PedidoFlexy.DataInserido)).group_by()).all()
+        print(transactions_data)
+testes()
+'''
+
+
+'''
+
+        query = (text("""
+            SELECT DISTINCT *FROM [HauszMapa].[Pedidos].[PedidoFlexy] AS PFLEXY
+            JOIN [HauszMapa].[Pedidos].[EnderecoPedidos]AS EPEDIDO
+            ON EPEDIDO.Idcliente = PFLEXY.IdCliente
+            JOIN [HauszMapa].[Cadastro].[Cidade] as ccidade
+            ON ccidade.IdCidade = EPEDIDO.IdCidade
+            JOIN [HauszMapa].[Cadastro].[Estado] as cestado
+            ON cestado.IdEstado = ccidade.IdEstado
+            WHERE convert(date,PFLEXY.[DataInserido])  =  '2022-10-18'
+            AND PFLEXY.StatusPedido ='Em separação'"""))
+        teste = conn.execute(query).all()
+      
+        query_dicts = [{key: value for (key, value) in row.items()} for row in teste]
+        for pedidos in query_dicts:
           
+            jsons = executa_select(pedido = pedidos.get('CodigoPedido'))
+            dict_items = next(chain(jsons))
+            #print(dict_items)
+            dict_items = sorted(dict_items, key=group_keys)
+            for key, value in groupby(dict_items, group_keys):
+                #cont = len(list(value))
+                dicts = verifica_dict(list(value))
+                dicts.update(pedidos)
+                lista_pedidos.append(dicts)
+    
+    emissao_nf(lista_pedidos,API_KEY_EMISSAO,COMPANY_ID_EMISSAO)
+    return make_response(jsonify({'EmitindoNFE':lista_pedidos})),201
+'''

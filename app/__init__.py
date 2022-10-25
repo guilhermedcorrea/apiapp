@@ -9,7 +9,7 @@ from .extensions import db
 #db = SQLAlchemy()
 
 def create_app() -> Flask:
-    app = Flask(__name__)
+    app = Flask(__name__, template_folder='templates')
     app.config['SECRET_KEY'] = SECRET_KEY
     app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
     app.config['SQLALCHEMY_BINDS'] = SQLALCHEMY_BINDS
@@ -26,6 +26,10 @@ def create_app() -> Flask:
         from .api.cadastra_nf import cadastro_bp
         from .api.consulta_nf import consulta_bp
         from .api.jestor import jestor_bp
+        #from .admin.admin import admin_bp
+        from .api.teste import testes
+
+        app.register_blueprint(testes)
         app.register_blueprint(cadastro_bp)
         app.register_blueprint(consulta_bp)
         app.register_blueprint(jestor_bp)

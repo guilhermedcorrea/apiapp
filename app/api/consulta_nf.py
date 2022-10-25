@@ -1,4 +1,5 @@
 from typing import Any
+from datetime import datetime, timedelta
 from flask import Blueprint, request, jsonify, make_response, Response, abort, current_app
 from functools import wraps
 import os
@@ -9,11 +10,15 @@ from ..extensions import db
 from ..models.pedidos_hausz_mapa import PedidoFlexy
 from ..models.cliente_hausz_mapa import EnderecoPedidos
 from sqlalchemy import text
-from datetime import datetime
+from datetime import date, datetime
 from itertools import chain
 from ..controllers.controllers_hausz_mapa import executa_select
 from itertools import groupby
-
+from sqlalchemy import func
+from datetime import date
+from sqlalchemy import cast, DATE
+from ..models.pedidos_hausz_mapa import ItensFlexy
+from sqlalchemy import select
 
 def register_handlers(app):
     if current_app.config.get('DEBUG') is True:
@@ -83,17 +88,64 @@ def listas_all_empresas() -> Response:
     except:
         abort(400)
 
-@consulta_bp.route('/api/v2/companies/list/nfe/all', methods=['GET','POST'])
-def consulta_nf():
+
+Transactions = 'a'
+
+
+@consulta_bp.route('/api/v2/diaanterior/dia', methods=['GET','POST'])
+def filtra_dia_anterior():
+    try:
+        transactions_data = db.session.query(ItensFlexy).filter(
+            ItensFlexy.DataInserido > date.today() - timedelta(weeks=1)).all()
+        return make_response(jsonify(transactions_data)), 201
+    except:
+        abort(400)
+
+@consulta_bp.route('/api/v2/agrupavalor/dia', methods=['GET','POST'])
+def agrupa_por_dia():
+    with db.engine.connect() as conn:
+        try:
+            transactions_data = conn.execute(select(ItensFlexy.DataInserido
+                ,func.sum(ItensFlexy.Quantidade)).group_by(ItensFlexy.DataInserido)).all()
+            data_agrupadas = [(x,y) for (x,y) in transactions_data]
+            return make_response(jsonify(data_agrupadas)), 201
+        except:
+            abort(400)
+
+
+@consulta_bp.route('/api/v2/agrupavalor/mes', methods=['GET','POST'])
+def agrupa_por_mes():
+    
+    with db.engine.connect() as conn:
+        transactions_data = conn(select(ItensFlexy).filter(func.date(ItensFlexy.DataInserido) == date.today())).all()
+        data_agrupadas = [(x,y) for (x,y) in transactions_data]
+        return make_response(jsonify(data_agrupadas)), 201
+
+
+    return "aaa"
+    '''
+    try:
+        transactions_data = db.session.query(func.strftime('%', ItensFlexy.DataInserido)
+            ,func.sum(ItensFlexy.DataInserido)).group_by().all()
+        print(transactions_data)
+        data_agrupadas_mes = [(x,y) for (x,y) in transactions_data]
+        return make_response(jsonify(data_agrupadas_mes)), 201
+    except Exception as e:
+        print(e)
+    '''
+
+
+    
+
+
+    '''
     try:
         jsons = get_parametros(compani_id=COMPANY_ID_EMISSAO, api_key=API_KEY_EMISSAO)
         return make_response(jsonify(jsons))
     except:
         abort(400)
+    '''
   
-
-
-
 
 
 '''
