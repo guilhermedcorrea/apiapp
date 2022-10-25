@@ -137,3 +137,26 @@ def list_all_empresas(f) -> Any:
         
     return obtem_endpoint
 
+
+def consulta_all_notas():
+    url ='https://api.nfse.io/v2/companies/acd0c1c8f5a1486592c6ed80d94e2bb7/productinvoices?environment=test&apikey=t0StUhoH4JiSN72ehwrhq3nQ27gRDTSJGt2W98rDXilRTwhNoJAiGtM9WUcl9MscjjW'
+
+    payload = []
+    headers = []
+    
+    response = requests.request("GET", url, headers=headers, data=payload)
+ 
+    jsons = response.json()
+    return jsons
+
+
+def consulta_nfe_por_id(idnfe):
+    url = """https://api.nfse.io/v2/companies/acd0c1c8f5a1486592c6ed80d94e2bb7/productinvoices/{}/events?apikey=t0StUhoH4JiSN72ehwrhq3nQ27gRDTSJGt2W98rDXilRTwhNoJAiGtM9WUcl9MscjjW""".format(idnfe)
+
+    payload = {}
+    headers = {}
+    
+    response = requests.request('GET', url, headers=headers, data=payload)
+    return response.json()
+    
+    

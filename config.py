@@ -13,6 +13,9 @@ database = os.getenv('Database')
 usuario = os.getenv('UID')
 password = os.getenv('PWD')
 basedir = path.abspath(path.dirname(__file__))
+
+
+
 load_dotenv(path.join(basedir, '.env'))
 
 

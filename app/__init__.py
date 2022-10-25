@@ -23,16 +23,14 @@ def create_app() -> Flask:
         referentes ao cadastro, consulta e tela de importação de arquivos
         
         """
-        #Não mover esses imports para cima ou causara erro de contexto ou importação circular
-        from .api.cadastra_nf import cadastro_bp
+   
+        from .api.newteste import cadastronota_bp
         from .api.consulta_nf import consulta_bp
-        from .api.jestor import jestor_bp
-        from .admin.hausz_admin import admin_bp
-        
-        app.register_blueprint(cadastro_bp)
         app.register_blueprint(consulta_bp)
-        app.register_blueprint(jestor_bp)
-        app.register_blueprint(admin_bp)
+        
+
+        app.register_blueprint(cadastronota_bp)
+      
         
  
     return app
