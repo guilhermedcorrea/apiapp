@@ -131,11 +131,3 @@ def cancela_nota() -> Response:
         return jsonify({"CANCELANF":id_nf}),201
     except:
         abort(400)
-
-@cadastro_bp.route("/api/v2/companies/cartacorrecao/", methods=['GET','POST'])
-def carta_correcao() -> Response:
-    id_nf  = request.get_json()
-    try:
-        return jsonify({"CANCELANF":id_nf}),201
-    except:
-        abort(400)

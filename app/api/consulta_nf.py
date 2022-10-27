@@ -81,7 +81,7 @@ def listas_all_empresas() -> Response:
         abort(400)
 
 @consulta_bp.route('/api/v2/companies/list/nfe/all', methods=['GET','POST'])
-def consulta_nf():
+def consulta_nf() -> Response:
     try:
         jsons = consulta_all_notas()
         return make_response(jsonify(jsons))
@@ -89,8 +89,7 @@ def consulta_nf():
         abort(400)
         
 @consulta_bp.route('/api/v2/companies/list/nfe/idnfe', methods=['GET','POST'])
-
-def consulta_nfe_id():
+def consulta_nfe_id() -> Response:
     try:
         id_nf  = request.get_json()
         id_nf = id_nf['IdNfe']
@@ -98,4 +97,34 @@ def consulta_nfe_id():
         return make_response(jsonify(jsons_nf))
     except:
         abort(400)
+        
+        
+@consulta_bp.route('/api/v2/companies/list/nfe/list/xml',methods=['GET','POST'])
+def consulta_xml_nfe() -> Response:
+    data = request.get_json()
+    return make_response(jsonify({"xml":"teste"})), 201
 
+
+@consulta_bp.route('/api/v2/companies/list/xml/rejeicao',methods=['GET','POST'])
+def get_produtos_nfe_rejeicao() -> Response:
+    data = request.get_json()
+    return make_response(jsonify({"rejeicao":"teste"})), 201
+
+
+@consulta_bp.route('/api/v2/companies/list/nfe/list/pdf',methods=['GET','POST'])
+def consulta_xml_pdf() -> Response:
+    data = request.get_json()
+    return make_response(jsonify({"pdf":"teste"})), 201
+
+
+@consulta_bp.route('/api/v2/companies/list/nfe/items',methods=['GET','POST'])
+def get_produtos_nfe() -> Response:
+    data = request.get_json()
+    return make_response(jsonify({"items":"teste"})), 201
+
+
+@consulta_bp.route('/api/v2/companies/nfe/cartacorrecao',methods=['GET','POST'])
+def carta_correcao_nfe() -> Response:
+    data = request.get_json()
+    return make_response(jsonify({"correcao":"teste"})), 201
+    
