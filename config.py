@@ -26,18 +26,15 @@ UPLOADFOLDER = join_path = os.path.join(
                 , os.path.pardir)))
 
 
+TEMPLATE_FOLDER = os.path.abspath(os.path.dirname(__file__)) 
 
-TEMPLATE_FOLDER = os.path.abspath(os.path.dirname(__file__))
-
-
-
-paramsdev = urllib.parse.quote_plus("DRIVER={SQL Server Native Client 11.0};"
+paramsdev = urllib.parse.quote_plus("DRIVER={ODBC Driver 17 for SQL Server};"
                                  "SERVER=w2019.hausz.com.br;"
                                  "DATABASE=HauszMapaDev2;"
                                  "UID=Aplicacao.Guilherme;"
                                  "PWD=4PL1C4ÇAO_3STOQUF202#")
 
-params = urllib.parse.quote_plus("DRIVER={SQL Server Native Client 11.0};"
+params = urllib.parse.quote_plus("DRIVER={ODBC Driver 17 for SQL Server};"
                                  "SERVER=w2019.hausz.com.br;"
                                  "DATABASE=HauszMapa;"
                                  "UID=Aplicacao.Guilherme;"
@@ -48,8 +45,7 @@ SECRET_KEY = '5791628bb0b13ce0c676dfde280ba245'
 
 SQLALCHEMY_DATABASE_URI= ("mssql+pyodbc:///?odbc_connect=%s" % params)
 
-
 SQLALCHEMY_BINDS = {
-    "DATABASE1": ("mssql+pyodbc:///?odbc_connect=%s" %paramsdev),
-    "DATABASE2": ("mssql+pyodbc:///?odbc_connect=%s" %params)
+    "HauszMapaDev2": ("mssql+pyodbc:///?odbc_connect=%s" %paramsdev),
+    "HauszMapa": ("mssql+pyodbc:///?odbc_connect=%s" %params)
 }

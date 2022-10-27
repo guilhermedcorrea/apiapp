@@ -24,8 +24,6 @@ class PedidosVendaHausz(HauszMapa):
                 
                 dicts_produtos = [{key: value for (key, value) in row.items()} for row in get_pedidos]
                 
-        
-
                 yield dicts_produtos
             except:
                 yield 'notfound'

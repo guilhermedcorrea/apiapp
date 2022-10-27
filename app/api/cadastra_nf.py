@@ -1,25 +1,16 @@
-
-from errno import EDEADLK
 from flask import (Blueprint, Request, jsonify
     , make_response, Response, redirect, current_app, request,abort)
 from flask_marshmallow import Marshmallow
 from sqlalchemy import text
 from itertools import chain
-
-
-from ..controllers.controllers_notas import cadastrar_nfe
-from ..models.pedidos_hausz_mapa import ItensFlexy, PedidoFlexy
-from ..models.cliente_hausz_mapa import Cidade,Estado, EnderecoPedidos
+from ..controllers.controllers_notas import emissao_nfe
 import os
 from dotenv import load_dotenv
 import json
 from typing import Dict, Tuple, List, Literal, Any
 from ..controllers.controllers_hausz_mapa import executa_select
-
 from ..extensions import db
 from itertools import groupby
-from sqlalchemy import select
-from datetime import datetime, date, timedelta
 
 
 
@@ -65,75 +56,87 @@ https://nfe.io/docs/desenvolvedores/rest-api/nota-fiscal-de-produto-v2/#/
 """
 
 
+@emissao_nfe
+def emissao_nf(*args: tuple, **kwargs: dict[str, Any]) -> dict[str, Any]:
+    print(args, kwargs)
+
 
 def group_keys(key) -> Any:
     return key['CodigoPedido']
 
+#convert(date,getdate()
+#teste funcao
+
+def verifica_dict(dict_items) -> (dict | Literal['erro'] | None):
+    match dict_items:
+        case dict_items if len(dict_items) >1:
+            for items in dict_items:
+                return items
+        case dict_items if len(dict_items) ==1:
+            for items in dict_items:
+                return items
+        case _:
+            return "erro"
+
 
 @cadastro_bp.route("/api/v2/companies/emissao/", methods=['GET','POST'])
 def cadastra_notas() -> Response:
-    """Ajustar ordem nfs"""
     lista_pedidos: list[dict[str, str]] = []
     with db.engine.connect() as conn:
-
-        pedidos = conn.execute(db.select(PedidoFlexy).filter(PedidoFlexy.StatusPedido=='Em separação')).all()
-        
-        pedidos_sep = [next(executa_select(pedido[2])) for pedido in pedidos]
-        #jsons = cadastrar_nfe(next(chain(pedidos_sep)))
-        for key, value in groupby(next(chain(pedidos_sep)), group_keys):
-            lista = list(value)
-            lista_values = []
-            lista_item = []
-            buyer = {}
-            for i in range(len(lista)):
-
-                buyer['namecliente'] = lista[i].get('NomeCliente')
-                buyer['tradeName'] = lista[0].get('NomeCliente')
-                buyer['code'] = lista[i].get('Cep')
-                buyer['name'] = lista[i].get('Nome')
-                buyer['street'] = lista[i].get('Endereco')
-                buyer['number'] = lista[i].get('Numero')
-                buyer['postalCode'] = lista[i].get('Cep')
-                buyer['description'] = lista[i]['CodigoPedido']
-                buyer['CodigoPedido'] = lista[i]['CodigoPedido']
-
-                new_item = {"code": f"{lista[i]['SKU']}","unitAmount": float(lista[i]['PrecoUnitario']), "quantity": float(lista[i]['Quantidade'])
-                    ,"cfop": 5102,"ncm": f"{lista[i]['NCM']}",
-                    "codeGTIN": f"{lista[i]['EAN']}","codeTaxGTIN": f"{lista[i]['EAN']}", "tax": {"totalTax": 6, "icms": {
-                    "csosn": "102","origin": "0"},"pis": {"amount": 0,"rate": 0,"baseTax": 208,"cst": "08" },
-                    "cofins": {"amount": 0,"rate": 0,"baseTax": 208,"cst": "08"}},"cest": "",
-                    "description": f"{lista[i].get('NomeProduto')}"}
-    
-                lista_item.append(new_item)
-                
-            jsons = cadastrar_nfe(items = lista_item, name_cliente=buyer.get('namecliente'), tradeName=buyer.get('tradeName'),code=buyer.get('code')
-                ,name_city=buyer.get('name'),street=buyer.get('street'),number=buyer.get('number')
-                    ,postalCode=buyer.get('postalCode'),description=buyer.get('description'),id=buyer.get('CodigoPedido'))
-
-            print(jsons)
+        query = (text("""
+            SELECT DISTINCT *FROM [HauszMapa].[Pedidos].[PedidoFlexy] AS PFLEXY
+            JOIN [HauszMapa].[Pedidos].[EnderecoPedidos]AS EPEDIDO
+            ON EPEDIDO.Idcliente = PFLEXY.IdCliente
+            JOIN [HauszMapa].[Cadastro].[Cidade] as ccidade
+            ON ccidade.IdCidade = EPEDIDO.IdCidade
+            JOIN [HauszMapa].[Cadastro].[Estado] as cestado
+            ON cestado.IdEstado = ccidade.IdEstado
+            WHERE convert(date,PFLEXY.[DataInserido])  =  '2022-10-18'
+            AND PFLEXY.StatusPedido ='Em separação'"""))
+        teste = conn.execute(query).all()
       
-            return make_response(jsonify({"NotaFiscal":"Criada Com Sucesso"
-                ,"Status":200,"Pedido":buyer['CodigoPedido'],"Cliente":buyer['namecliente'],"item":jsons})),201
-        return "Error"
+        query_dicts = [{key: value for (key, value) in row.items()} for row in teste]
+        for pedidos in query_dicts:
+          
+            jsons = executa_select(pedido = pedidos.get('CodigoPedido'))
+            dict_items = next(chain(jsons))
+            #print(dict_items)
+            dict_items = sorted(dict_items, key=group_keys)
+            for key, value in groupby(dict_items, group_keys):
+                #cont = len(list(value))
+                dicts = verifica_dict(list(value))
+                dicts.update(pedidos)
+                lista_pedidos.append(dicts)
+    
+    emissao_nf(lista_pedidos,API_KEY_EMISSAO,COMPANY_ID_EMISSAO)
+    return make_response(jsonify({'EmitindoNFE':lista_pedidos})),201
+
+@cadastro_bp.route("/api/v2/companies/emissao/<pedido>", methods=['GET','POST'])
+def cadastra_nota_referencia(pedido):
+
+    jsons = executa_select(pedido = int(pedido))
+    dict_items = next(chain(jsons))
+          
+    #dict_items = sorted(dict_items, key=group_keys)
+    #for key, value in groupby(dict_items, group_keys):
+
+    #    dicts = verifica_dict(next(value))
+        #pedido_nf = emissao_nf(dicts,API_KEY_EMISSAO,COMPANY_ID_EMISSAO)
+    print(dict_items)
+    pedido_nf = emissao_nf(dict_items,API_KEY_EMISSAO,COMPANY_ID_EMISSAO)
+    return make_response(jsonify(dict_items)),201
+   
 
 
-@cadastro_bp.route("/api/v1/companies/cancelamento/", methods=['GET','POST'])
+@cadastro_bp.route("/api/v2/companies/cancelamento/", methods=['GET','POST'])
 def cancela_nota() -> Response:
     id_nf  = request.get_json()
-    values = int(id_nf['id'])
+    try:
+        return jsonify({"CANCELANF":id_nf}),201
+    except:
+        abort(400)
 
-    with db.engine.connect() as conn:
-        query =  ItensFlexy.query.filter_by(CodigoPedido=values).first_or_404()
-
-        items = {
-                "CodigoPedido":query.CodigoPedido,
-                "Quantidade":query.Quantidade,
-                "QuantidadeCaixa":query.QtdCaixa
-                }
-        
-    return jsonify({"CANCELANF":items}),201
-   
-@cadastro_bp.route("/api/v1/companies/cartacorrecao/", methods=['GET','POST'])
+@cadastro_bp.route("/api/v2/companies/cartacorrecao/", methods=['GET','POST'])
 def carta_correcao() -> Response:
     id_nf  = request.get_json()
     try:

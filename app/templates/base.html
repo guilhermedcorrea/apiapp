@@ -9,6 +9,7 @@
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="{{ url_for('static', filename='bs/css/flatly.min.css') }}" />
         <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     </head>
     <body>
         {% if admin %}
@@ -22,20 +23,20 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="{{ url_for('Admin.admin') }}">NotasFiscais</a>
+                    <a class="navbar-brand" href="{{ url_for('admin.index') }}">Ecommerce</a>
                 </div>
-                
+        
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse navbar-ex1-collapse">
                     <ul class="nav navbar-nav">
                         <li class="active">
-                            <a href="{{ url_for('Admin.admin') }}"><i class="glyphicon glyphicon-dashboard"></i> Admin Dashboard</a>
+                            <a href="{{ url_for('admin.admin') }}"><i class="glyphicon glyphicon-dashboard"></i> Admin Dashboard</a>
                         </li>
                         <li>
-                            <a href=""><i class="glyphicon glyphicon-plus-sign"></i> Adicionar Produto</a>
+                            <a href="{{ url_for('admin.add') }}"><i class="glyphicon glyphicon-plus-sign"></i> Adicionar Produto</a>
                         </li>
                         <li>
-                            <a href="{{ url_for('Admin.admin') }}"><i class="glyphicon glyphicon-chevron-left"></i> Home</a>
+                            <a href="{{ url_for('admin.index') }}"><i class="glyphicon glyphicon-chevron-left"></i> Home</a>
                         </li>
                     </ul>
                 </div><!-- /.navbar-collapse -->
@@ -52,7 +53,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="{{ url_for('Admin.index') }}">NFs</a>
+                    <a class="navbar-brand" href="{{ url_for('admin.index') }}">NFs</a>
                 </div>
         
                 <!-- Collect the nav links, forms, and other content for toggling -->
