@@ -1,3 +1,5 @@
+
+
 from functools import wraps
 import os
 from dotenv import load_dotenv
@@ -158,5 +160,4 @@ def consulta_nfe_por_id(idnfe):
     
     response = requests.request('GET', url, headers=headers, data=payload)
     return response.json()
-    
     
