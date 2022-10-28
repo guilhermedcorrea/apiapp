@@ -56,3 +56,34 @@ class EnderecoPedidos(db.Model):
     def __repr__(self):
         return f"CodigoPedido -> {self.CodigoPedido}"
 
+
+class Cidade(db.Model):
+    __tablename__ = "Cidade"
+    __table_args__ = {"schema": "Cadastro"}
+
+
+    IdCidade = db.Column(db.Integer, primary_key=True)
+    Nome = db.Column(db.String)
+    Latitude = db.Column(db.Float)
+    Longitude = db.Column(db.Float)
+    Capital = db.Column(db.Integer)
+    IdEstado = db.Column(db.Integer)
+
+
+class Estado(db.Model):
+    __tablename__ = "Estado"
+    __table_args__ = {"schema": "Cadastro"}
+ 
+    IdEstado = db.Column(db.Integer, primary_key=True)
+    Nome = db.Column(db.String)
+    Uf = db.Column(db.String)
+    Latitude = db.Column(db.Integer)
+    Longitude = db.Column(db.Integer)
+
+
+
+
+
+
+
+

@@ -4,9 +4,9 @@ from sqlalchemy import DateTime
 from flask_sqlalchemy import SQLAlchemy
 from ..extensions import db
 
+
 class NotaFiscal(db.Model):
     __tablename__ = "NotaFiscal"
-    __bind_key__ = 'HauszMapa'
     __table_args__ = {"schema": "Pedidos"}
 
     IdNFe = db.Column(db.Integer, primary_key=True)
@@ -97,7 +97,6 @@ class NotaFiscal(db.Model):
 
 class NotaFiscalItens(db.Model):
     __tablename__ = "NotaFiscalItens"
-    __bind_key__ = 'HauszMapa'
     __table_args__ = {"schema": "Pedidos"}
 
     IdItensNF = db.Column(db.Integer, primary_key=True)

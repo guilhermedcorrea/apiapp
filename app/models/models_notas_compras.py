@@ -47,7 +47,7 @@ class PedidoCompraShowroom(db.Model):
 
 
 
-
+'''
 class PedidoCompraItens(db.Model):
     __tablename__ = "PedidoCompraItens"
     __bind_key__ = 'HauszMapa'
@@ -77,7 +77,6 @@ class PedidoCompraItens(db.Model):
 '''
 class NotaFiscalCompra(db.Model):
     __tablename__ = "NotaFiscalCompra"
-    __bind_key__ = 'HauszMapa'
     __table_args__ = {"schema": "Pedidos"}
 
     IdNFe = db.Column()
@@ -186,4 +185,4 @@ class NotaFiscalCompraItens(db.Model):
     QuantidadeTributavel = db.Column(db.Float)
     ValorUnidTributavel = db.Column(db.Float)
     indTot = db.Column(db.Boolean, nullable=True)
-
+'''

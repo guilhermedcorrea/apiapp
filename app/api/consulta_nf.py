@@ -50,7 +50,6 @@ from ..controllers.controllers_notas import get_metodo, list_all_empresas
 
 """
 NOTA FISCAL CONSUMIDOR
-
 """
 load_dotenv()
 
@@ -69,7 +68,6 @@ def get_list_empresas(*args: tuple, **kwargs: Dict[str, Any]) -> None:
 """
 Lista notas
 https://nfe.io/docs/desenvolvedores/rest-api/nota-fiscal-de-consumidor-v2/#/
-
 """
 
 @consulta_bp.route('/api/v2/companies/list/empresas/all', methods=['GET','POST'])
@@ -89,13 +87,19 @@ def consulta_nf() -> Response:
         abort(400)
         
 @consulta_bp.route('/api/v2/companies/list/nfe/idnfe', methods=['GET','POST'])
+<<<<<<< HEAD
 def consulta_nfe_id() -> Response:
+=======
+
+def consulta_nfe_id():
+>>>>>>> 5d3397dfbdb23ac89f5e0f807dc77c49e577763f
     try:
         id_nf  = request.get_json()
         id_nf = id_nf['IdNfe']
         jsons_nf = consulta_nfe_por_id(id_nf)
         return make_response(jsonify(jsons_nf))
     except:
+<<<<<<< HEAD
         abort(400)
         
         
@@ -128,3 +132,6 @@ def carta_correcao_nfe() -> Response:
     data = request.get_json()
     return make_response(jsonify({"correcao":"teste"})), 201
     
+=======
+        abort(400)
+>>>>>>> 5d3397dfbdb23ac89f5e0f807dc77c49e577763f

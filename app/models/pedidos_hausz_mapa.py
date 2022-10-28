@@ -5,6 +5,7 @@ from sqlalchemy import DateTime
 
 class PedidoFlexy(db.Model):
     __tablename__ = "PedidoFlexy"
+    __bind_key__ = 'HauszMapa'
     __table_args__ = {"schema": "Pedidos"}
     IdPedidoFlexy = db.Column(db.Integer, primary_key=True)
     IdOrcamento = db.Column(db.Integer)
@@ -69,6 +70,7 @@ class EtapaFlexy(db.Model):
 '''
 class ItensFlexy(db.Model):
     __tablename__ = "ItensFlexy"
+    __bind_key__ = 'HauszMapa'
     __table_args__ = {"schema": "Pedidos"}
 
     IdPedidoItensFlexy = db.Column(db.Integer, primary_key=True)
