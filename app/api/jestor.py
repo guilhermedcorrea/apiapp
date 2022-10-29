@@ -62,7 +62,6 @@ def get_jestor_pedido_item_all() -> Response:
         abort(400)
         
 
-
 ''''
 @jestor_bp.route('/api/v1/jestor/pedidos/pedidositens/all', methods=['GET','POST'])
 def get_jestor_pedido_item_all() -> Response:
