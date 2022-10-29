@@ -26,19 +26,8 @@ def create_app() -> Flask:
    
         from .api.newteste import cadastronota_bp
         from .api.consulta_nf import consulta_bp
-<<<<<<< HEAD
-=======
-        from .api.jestor import jestor_bp
-        from .admin.hausz_admin import admin_bp
-
-
-        app.register_blueprint(cadastro_bp)
->>>>>>> 5d3397dfbdb23ac89f5e0f807dc77c49e577763f
-        app.register_blueprint(consulta_bp)
-        
-
         app.register_blueprint(cadastronota_bp)
-      
+
         
  
     return app
