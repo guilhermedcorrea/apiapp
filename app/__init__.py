@@ -29,6 +29,7 @@ def create_app() -> Flask:
         from .api.jestor import jestor_bp
         from .admin.hausz_admin import admin_bp
 
+
         app.register_blueprint(cadastro_bp)
         app.register_blueprint(consulta_bp)
         app.register_blueprint(jestor_bp)
