@@ -96,9 +96,42 @@ def listas_all_empresas() -> Response:
 
 @consulta_bp.route('/api/v2/companies/list/nfe/all', methods=['GET','POST'])
 def consulta_nf() -> Response:
+    
     try:
+        lista_notas = []
         jsons = consulta_all_notas()
-        return make_response(jsonify(jsons))
+        dicts = [item for item in jsons['productInvoices']]
+        for i in range(len(dicts)):
+            dicts_nfs = {}
+            dicts_nfs['serie'] = dicts[i]['serie'] 
+            dicts_nfs['number'] = dicts[i]['number']
+            dicts_nfs['issuer'] = dicts[i]['issuer']
+            dicts_nfs['buyer'] = dicts[i]['buyer']
+            dicts_nfs['totals'] = dicts[i]['totals']
+            lista_notas.append({dicts[i]['number']:dicts_nfs})
+    
+        return make_response(jsonify(lista_notas))
     except:
         abort(400)
-        
+
+
+@consulta_bp.route('/api/v2/companies/list/nfe/idnfe', methods=['GET','POST'])
+def retorna_nfe_id():
+    pass
+
+@consulta_bp.route('/api/v2/companies/list/nfe/xml/all', methods=['GET','POST'])
+def retorna_all_xml():
+    pass
+
+@consulta_bp.route('/api/v2/companies/list/nfe/pdf/all', methods=['GET','POST'])
+def retorna_all_pdf():
+    pass
+
+@consulta_bp.route('/api/v2/companies/list/nfe/pdf/idnf', methods=['GET','POST'])
+def retorna_pdf_id_nf():
+    pass
+
+
+@consulta_bp.route('/api/v2/companies/list/nfe/xml/idxml', methods=['GET','POST'])
+def retorna_xml_id_nf():
+    pass
