@@ -1,5 +1,5 @@
 from flask import Blueprint,make_response, request, abort
-from ..extensions import db
+from ..extensions import db, ma
 from sqlalchemy import text
 from itertools import groupby, chain
 import os
@@ -12,6 +12,8 @@ from operator import itemgetter
 from ..controllers.controllers_notas import emissao_nfe
 from ..controllers.controllers_hausz import get_pedidos_flexy
 from .omie_api import get_nota_saida_omie
+from apifairy import response, other_responses, body, arguments, authenticate
+
 
 cadastronota_bp = Blueprint('teste', __name__)
 
@@ -64,8 +66,43 @@ def ajuste_dict(pedido: Any, nota: Any) -> Generator[dict, None, None]:
     new_dict.get('prod')
     dict_p.update(new_dict.get('prod'))
     yield dict_p
-   
+
+class EmissaoNfProduto(ma.Schema):
+    CodigoPedido = ma.String(data_key='CodigoPedido', required=True)
+    namecliente = ma.Str()
+    tradeName = ma.Str()
+    code = ma.Str()
+    name = ma.Str()
+    street = ma.Str()
+    number = ma.Float()
+    postalCode = ma.Str()
+    description = ma.Str()
+    CFOP = ma.Float()
+    vBCST = ma.Float()
+    cOrigem = ma.Float()
+    code = ma.Float()
+    unitAmount = ma.Float()
+    quantity = ma.Float()
+    cfop = ma.Float()
+    ncm = ma.Str()
+    codeGTIN = ma.Str()
+    codeTaxGTIN = ma.Str()
+    totalTax = ma.Float()
+    icms = ma.Float()
+    csosn = ma.Float()
+    origin = ma.Float()
+    amount = ma.Float()
+    rate = ma.Float()
+    baseTax = ma.Float()
+    cst = ma.Float()
+    amount = ma.Float()
+    baseTax  =ma.Float()
+    description = ma.Str()
+    
+    
 @cadastronota_bp.route('/api/v1/produtos/emissaonf', methods=['GET','POST'])
+@response(EmissaoNfProduto, 201)
+@other_responses({"404":"not"})
 def cadastra_nota_teste() -> Any:
     with db.engine.connect() as conn:
         data = request.get_json()

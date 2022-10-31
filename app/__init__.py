@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from config import SECRET_KEY, SQLALCHEMY_DATABASE_URI, SQLALCHEMY_BINDS
 from .extensions import db, ma
 from apifairy import APIFairy
+from flask_marshmallow import Marshmallow
 
 apifairy = APIFairy()
 
@@ -20,6 +21,7 @@ def create_app() -> Flask:
     db.init_app(app)
     app.config['APIFAIRY_TITLE'] = 'NFE-IO'
     app.config['APIFAIRY_VERSION'] = '1.0'
+    app.config['APIFAIRY_UI'] = 'swagger_ui'
     apifairy.init_app(app)
     ma.init_app(app)
  
@@ -30,9 +32,9 @@ def create_app() -> Flask:
         
         """
    
-        #from .api.cadastra_nf import cadastronota_bp
+        from .api.cadastra_nf import cadastronota_bp
         from .api.consulta_nf import consulta_bp
-        #app.register_blueprint(cadastronota_bp)
+        app.register_blueprint(cadastronota_bp)
         app.register_blueprint(consulta_bp)
 
         

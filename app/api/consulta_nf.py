@@ -1,4 +1,5 @@
 from typing import Any
+from typing_extensions import Required
 from flask import Blueprint, request, jsonify, make_response, Response, abort, current_app
 from functools import wraps
 import os
@@ -85,7 +86,7 @@ class ListCompaniesAll(ma.Schema):
     
 
 @consulta_bp.route('/api/v2/companies/list/empresas/all', methods=['GET'])
-@response(ListCompaniesAll, 201)
+@response(ListCompaniesAll)
 def listas_all_empresas() -> Response:
     """Retorna lista de empresas cadastradas"""
     try:
@@ -120,6 +121,7 @@ class CompaniesListNfeAll(ma.Schema):
 
 @consulta_bp.route('/api/v2/companies/list/nfe/all', methods=['GET','POST'])
 @response(CompaniesListNfeAll, 201)
+@other_responses({"error":"notfound"})
 def consulta_nf() -> Response:
     """Retorna todas as notas fiscais emitidas"""
     try:
@@ -152,10 +154,12 @@ def consulta_nf() -> Response:
 
 '''      
 class CompaniesListProdutosNfe(ma.Schema):
+    IdNota = ma.Int(data_key='IdNota', required=True)
     id = ma.Str()
     companyId = ma.Str()
   
 @consulta_bp.route('/api/v2/companies/list/produtos/nfe', methods=['GET','POST'])
+@response(CompaniesListProdutosNfe)
 def retorna_produtos_nfe():
     idnota = request.get_json()
     ref_nota = idnota['IdNota']
@@ -178,6 +182,9 @@ def retorna_produtos_nfe():
 def retorna_nfe_id():
     pass
 
+
+class CompaniesListXmlAll(ma.SQLAlchemyAutoSchema):
+    pass
 
 @consulta_bp.route('/api/v2/companies/list/nfe/xml/all', methods=['GET','POST'])
 def retorna_all_xml():
