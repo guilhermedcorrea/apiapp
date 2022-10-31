@@ -10,7 +10,6 @@ from flask_admin import AdminIndexView
 admin_bp = Blueprint('Admin', __name__)
 
 
-
 class MyAdminIndexView(AdminIndexView):
     @expose('/')
     def Home(self):

@@ -10,7 +10,6 @@ def get_pedidos_flexy() -> List[dict]:
     try:
          with db.engine.begin() as conn:
             exec = (text(""" EXEC GetOrders = {}""".format()))
-
             exec_produtos = conn.execute(exec)
             dicts_produtos = [{key: value for (key, value) in row.items()} for row in exec_produtos]
             yield dicts_produtos

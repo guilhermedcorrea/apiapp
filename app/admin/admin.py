@@ -26,6 +26,7 @@ class AddProduct(FlaskForm):
     description = TextAreaField('Description')
     #image = FileField('Image', validators=[FileAllowed(IMAGES, 'Only images are accepted.')])
 
+
 @admin_bp.route('/admin/')
 @admin_bp.route('/admin')
 def admin():
