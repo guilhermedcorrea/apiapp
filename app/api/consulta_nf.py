@@ -74,14 +74,23 @@ https://nfe.io/docs/desenvolvedores/rest-api/nota-fiscal-de-consumidor-v2/#/
 def listas_all_empresas() -> Response:
     try:
         jsons = get_list_empresas(api_key= API_KEY_EMISSAO)
-     
-        dicts = [jsons[item] for item in jsons]
-        print(next(chain(dicts)))
-    
-       
-
-   
-        return make_response(jsonify(jsons)), 201
+        listas = []
+        dict_item = (filter(lambda k: k,[jsons[x] for x in jsons]))
+        for item in next(chain(dict_item)):
+        
+            dict_items = {
+                "taxRegime":item['taxRegime'],
+                "address":item['address'],
+                "modifiedOn":item['modifiedOn'],
+                "createdOn":item['createdOn'],
+                "status":item['status'],
+                "federalTaxNumber":item['federalTaxNumber'],
+                "name":item['name'],
+                "ID":item['id'],
+                "accountId":item['accountId']}
+            listas.append(dict_items)
+         
+        return make_response(jsonify({item['id']:listas})), 201
     except:
         abort(400)
 
