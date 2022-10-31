@@ -12,7 +12,7 @@ from ..models.cliente_hausz_mapa import EnderecoPedidos
 from sqlalchemy import text
 from datetime import datetime
 from itertools import chain
-from ..controllers.controllers_notas import consulta_all_notas, consulta_nfe_por_id
+from ..controllers.controllers_notas import consulta_all_notas, consulta_nfe_por_id, listar_xml_nfs_emitidas, lista_produtos_nfe
 from itertools import groupby
 
 
@@ -72,6 +72,7 @@ https://nfe.io/docs/desenvolvedores/rest-api/nota-fiscal-de-consumidor-v2/#/
 
 @consulta_bp.route('/api/v2/companies/list/empresas/all', methods=['GET','POST'])
 def listas_all_empresas() -> Response:
+    """Retorna lista de empresas cadastradas"""
     try:
         jsons = get_list_empresas(api_key= API_KEY_EMISSAO)
         listas = []
@@ -94,9 +95,10 @@ def listas_all_empresas() -> Response:
     except:
         abort(400)
 
+
 @consulta_bp.route('/api/v2/companies/list/nfe/all', methods=['GET','POST'])
 def consulta_nf() -> Response:
-    
+    """Retorna todas as notas fiscais emitidas"""
     try:
         lista_notas = []
         jsons = consulta_all_notas()
@@ -115,13 +117,39 @@ def consulta_nf() -> Response:
         abort(400)
 
 
+@consulta_bp.route('/api/v2/companies/list/produtos/nfe', methods=['GET','POST'])
+def retorna_produtos_nfe():
+    idnota = request.get_json()
+    ref_nota = idnota['IdNota']
+    jsons = lista_produtos_nfe(ref_nota)
+    
+    dict_produtos = [item for item in jsons['items']]
+  
+    
+
+    """
+    hasMore
+items
+accountId
+companyId
+id
+    """
+    for x in jsons:
+        print(x)
+
+    return jsons
+
 @consulta_bp.route('/api/v2/companies/list/nfe/idnfe', methods=['GET','POST'])
 def retorna_nfe_id():
     pass
 
+
 @consulta_bp.route('/api/v2/companies/list/nfe/xml/all', methods=['GET','POST'])
 def retorna_all_xml():
-    pass
+    """Retorna lista de todos xmls de nfs emitidas"""
+    jsons = listar_xml_nfs_emitidas()
+    return make_response(jsonify(jsons))
+ 
 
 @consulta_bp.route('/api/v2/companies/list/nfe/pdf/all', methods=['GET','POST'])
 def retorna_all_pdf():
@@ -130,7 +158,6 @@ def retorna_all_pdf():
 @consulta_bp.route('/api/v2/companies/list/nfe/pdf/idnf', methods=['GET','POST'])
 def retorna_pdf_id_nf():
     pass
-
 
 @consulta_bp.route('/api/v2/companies/list/nfe/xml/idxml', methods=['GET','POST'])
 def retorna_xml_id_nf():

@@ -106,6 +106,28 @@ def list_all_empresas(f) -> Any:
     return obtem_endpoint
 
 
+def listar_xml_nfs_emitidas():
+    url = "https://api.nfse.io/v2/companies/acd0c1c8f5a1486592c6ed80d94e2bb7/productinvoices/xml?environment=test&apikey=t0StUhoH4JiSN72ehwrhq3nQ27gRDTSJGt2W98rDXilRTwhNoJAiGtM9WUcl9MscjjW"
+
+    payload={}
+    headers = {}
+
+    response = requests.request("GET", url, headers=headers, data=payload)
+    return response.json()
+ 
+
+
+def lista_produtos_nfe(refproduto):
+    url = """https://api.nfse.io/v2/companies/acd0c1c8f5a1486592c6ed80d94e2bb7/productinvoices/{}/items?apikey=t0StUhoH4JiSN72ehwrhq3nQ27gRDTSJGt2W98rDXilRTwhNoJAiGtM9WUcl9MscjjW""".format(refproduto)
+
+    payload={}
+    headers = {}
+
+    response = requests.request("GET", url, headers=headers, data=payload)
+
+    return response.json()
+
+
 def consulta_all_notas():
     url =f'https://api.nfse.io/v2/companies/acd0c1c8f5a1486592c6ed80d94e2bb7/productinvoices?environment=test&apikey=t0StUhoH4JiSN72ehwrhq3nQ27gRDTSJGt2W98rDXilRTwhNoJAiGtM9WUcl9MscjjW'
 
