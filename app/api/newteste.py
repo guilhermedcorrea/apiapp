@@ -22,7 +22,8 @@ from typing import Generator, Any
 from collections import defaultdict
 from collections import ChainMap
 from operator import itemgetter
-from ..controllers.controllers_hausz_mapa import executa_select
+
+
 
 cadastronota_bp = Blueprint('teste', __name__)
 

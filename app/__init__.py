@@ -24,9 +24,10 @@ def create_app() -> Flask:
         
         """
    
-        from .api.newteste import cadastronota_bp
+        #from .api.cadastra_nf import cadastronota_bp
         from .api.consulta_nf import consulta_bp
-        app.register_blueprint(cadastronota_bp)
+        #app.register_blueprint(cadastronota_bp)
+        app.register_blueprint(consulta_bp)
 
         
  

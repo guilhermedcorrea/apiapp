@@ -1,4 +1,4 @@
-from flask import Blueprint,make_response, request
+from flask import Blueprint,make_response, request, abort
 from ..extensions import db
 from sqlalchemy import text
 from itertools import groupby, chain
@@ -26,7 +26,6 @@ API_KEY_EMISSAO = os.getenv('API_KEY_EMISSAO')
 COMPANY_ID_EMISSAO = os.getenv('COMPANY_ID_EMISSAO')
 
 
-    
 def ajuste_dict(pedido: Any, nota: Any) -> Generator[dict, None, None]:
     jsons = next(get_nota_saida_omie(int(nota)))
 
@@ -66,22 +65,19 @@ def ajuste_dict(pedido: Any, nota: Any) -> Generator[dict, None, None]:
     dict_p.update(new_dict.get('prod'))
     yield dict_p
    
-
-@cadastronota_bp.route('/testenota', methods=['GET','POST'])
+@cadastronota_bp.route('/api/v1/produtos/emissaonf', methods=['GET','POST'])
 def cadastra_nota_teste() -> Any:
     with db.engine.connect() as conn:
         data = request.get_json()
         ref_pedido = data['CodigoPedido']
 
         with db.engine.begin() as conn:
-
             try:
                 exec = (text( """ProdutosTax @codigopedido = {}""".format(ref_pedido)))
                 exec_produtos = conn.execute(exec)
-
             except:
+                abort(404)
 
-                print('erro')
 
         query_dicts = [{key: value for (key, value) in row.items()} for row in exec_produtos]
         jsons = next(chain(query_dicts))

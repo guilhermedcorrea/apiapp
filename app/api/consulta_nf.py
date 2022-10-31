@@ -60,6 +60,7 @@ def get_parametros(*args: tuple, **kwargs: Dict[str, Any]) -> None:
     """Docstring"""
     print('Called function')
 
+
 @list_all_empresas
 def get_list_empresas(*args: tuple, **kwargs: Dict[str, Any]) -> None:
     print("teste")
@@ -73,6 +74,13 @@ https://nfe.io/docs/desenvolvedores/rest-api/nota-fiscal-de-consumidor-v2/#/
 def listas_all_empresas() -> Response:
     try:
         jsons = get_list_empresas(api_key= API_KEY_EMISSAO)
+     
+        dicts = [jsons[item] for item in jsons]
+        print(next(chain(dicts)))
+    
+       
+
+   
         return make_response(jsonify(jsons)), 201
     except:
         abort(400)
