@@ -11,6 +11,19 @@ from urllib.parse import urlencode
 from typing import Generator, Any, Literal
 from itertools import chain
 
+
+
+def get_nota_saida_omie(idnota) -> Generator[Any, None, None]:
+
+    valor = r"""curl -s https://app.omie.com.br/api/v1/produtos/nfconsultar/ -H 'Content-type: application/json' -d '{"call":"ConsultarNF","app_key":"1566467100198","app_secret":"8f7c2ebf7899831ecce7c488e69a3e33","param":[{"nCodNF":0,"nNF":"618"}]}'"""
+    new_val = valor.replace('"nNF":"618"',f'"nNF":"{idnota}"')
+    lCmd = shlex.split(new_val)
+    p = subprocess.Popen(lCmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    out, err = p.communicate()
+    json_data = json.loads(out.decode("utf-8"))
+    yield json_data
+
+
 def get_recebimento_nf(chave) -> Generator[Any, None, None]:
 
     valor = r"""curl -s https://app.omie.com.br/api/v1/produtos/recebimentonfe/ -H 'Content-type: application/json' -d '{"call":"ConsultarRecebimento","app_key":"1566467100198","app_secret":"8f7c2ebf7899831ecce7c488e69a3e33","param":[{"nIdReceb":0,"cChaveNfe":""}]}'"""

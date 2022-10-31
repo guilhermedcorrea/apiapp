@@ -2,24 +2,16 @@ from flask import Blueprint,make_response, request
 from ..extensions import db
 from sqlalchemy import text
 from itertools import groupby, chain
-import requests
-import json
 import os
 from dotenv import load_dotenv
 from flask import jsonify
 import json
-from telnetlib import EC
-import shlex
-import json
-import subprocess
-import urllib.request, urllib.error, urllib.parse
-import certifi
-from io import BytesIO
-from urllib.parse import urlencode
 from typing import Generator, Any
 from collections import defaultdict, ChainMap
 from operator import itemgetter
-
+from ..controllers.controllers_notas import emissao_nfe
+from ..controllers.controllers_hausz import get_pedidos_flexy
+from .omie_api import get_nota_saida_omie
 
 cadastronota_bp = Blueprint('teste', __name__)
 
@@ -34,15 +26,6 @@ API_KEY_EMISSAO = os.getenv('API_KEY_EMISSAO')
 COMPANY_ID_EMISSAO = os.getenv('COMPANY_ID_EMISSAO')
 
 
-def get_nota_saida_omie(idnota) -> Generator[Any, None, None]:
-
-    valor = r"""curl -s https://app.omie.com.br/api/v1/produtos/nfconsultar/ -H 'Content-type: application/json' -d '{"call":"ConsultarNF","app_key":"1566467100198","app_secret":"8f7c2ebf7899831ecce7c488e69a3e33","param":[{"nCodNF":0,"nNF":"618"}]}'"""
-    new_val = valor.replace('"nNF":"618"',f'"nNF":"{idnota}"')
-    lCmd = shlex.split(new_val)
-    p = subprocess.Popen(lCmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    out, err = p.communicate()
-    json_data = json.loads(out.decode("utf-8"))
-    yield json_data
     
 def ajuste_dict(pedido: Any, nota: Any) -> Generator[dict, None, None]:
     jsons = next(get_nota_saida_omie(int(nota)))
@@ -92,19 +75,18 @@ def cadastra_nota_teste() -> Any:
 
         with db.engine.begin() as conn:
 
-        try:
-            exec = (text(
-                    """ProdutosTax @codigopedido = {}""".format(ref_pedido)))
-            exec_produtos = conn.execute(exec)
+            try:
+                exec = (text( """ProdutosTax @codigopedido = {}""".format(ref_pedido)))
+                exec_produtos = conn.execute(exec)
 
-        except:
+            except:
 
-            print('erro')
+                print('erro')
 
         query_dicts = [{key: value for (key, value) in row.items()} for row in exec_produtos]
         jsons = next(chain(query_dicts))
         jsons_nf = next(ajuste_dict(jsons['NumeroNF'], jsons['CodigoPedido']))
-        newjs = next(executa_select(pedido = jsons['CodigoPedido']))
+        newjs = next(get_pedidos_flexy(pedido = jsons['CodigoPedido']))
         jsons.update(newjs[0])
         
         listas = []
@@ -142,7 +124,7 @@ def cadastra_nota_teste() -> Any:
                   
                 lista_item.append(new_item)
                    
-            jsons = cadastrar_nfe(items = lista_item, name_cliente=buyer.get('namecliente'), tradeName=buyer.get('tradeName'),code=buyer.get('code')
+            jsons = emissao_nfe(items = lista_item, name_cliente=buyer.get('namecliente'), tradeName=buyer.get('tradeName'),code=buyer.get('code')
                 ,name_city=buyer.get('name'),street=buyer.get('street'),number=buyer.get('number')
                     ,postalCode=buyer.get('postalCode'),description=buyer.get('description'),id=buyer.get('CodigoPedido'))
        
