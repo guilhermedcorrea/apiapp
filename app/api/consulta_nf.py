@@ -124,9 +124,10 @@ def retorna_produtos_nfe():
     jsons = lista_produtos_nfe(ref_nota)
     
     dict_produtos = [item for item in jsons['items']]
+    for items in dict_produtos:
+        print(items)
   
-    
-
+  
     """
     hasMore
 items
