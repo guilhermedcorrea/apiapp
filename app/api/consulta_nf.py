@@ -12,7 +12,6 @@ from ..models.cliente_hausz_mapa import EnderecoPedidos
 from sqlalchemy import text
 from datetime import datetime
 from itertools import chain
-from ..controllers.controllers_hausz_mapa import executa_select
 from ..controllers.controllers_notas import consulta_all_notas, consulta_nfe_por_id
 from itertools import groupby
 
@@ -86,52 +85,3 @@ def consulta_nf() -> Response:
     except:
         abort(400)
         
-@consulta_bp.route('/api/v2/companies/list/nfe/idnfe', methods=['GET','POST'])
-<<<<<<< HEAD
-def consulta_nfe_id() -> Response:
-=======
-
-def consulta_nfe_id():
->>>>>>> 5d3397dfbdb23ac89f5e0f807dc77c49e577763f
-    try:
-        id_nf  = request.get_json()
-        id_nf = id_nf['IdNfe']
-        jsons_nf = consulta_nfe_por_id(id_nf)
-        return make_response(jsonify(jsons_nf))
-    except:
-<<<<<<< HEAD
-        abort(400)
-        
-        
-@consulta_bp.route('/api/v2/companies/list/nfe/list/xml',methods=['GET','POST'])
-def consulta_xml_nfe() -> Response:
-    data = request.get_json()
-    return make_response(jsonify({"xml":"teste"})), 201
-
-
-@consulta_bp.route('/api/v2/companies/list/xml/rejeicao',methods=['GET','POST'])
-def get_produtos_nfe_rejeicao() -> Response:
-    data = request.get_json()
-    return make_response(jsonify({"rejeicao":"teste"})), 201
-
-
-@consulta_bp.route('/api/v2/companies/list/nfe/list/pdf',methods=['GET','POST'])
-def consulta_xml_pdf() -> Response:
-    data = request.get_json()
-    return make_response(jsonify({"pdf":"teste"})), 201
-
-
-@consulta_bp.route('/api/v2/companies/list/nfe/items',methods=['GET','POST'])
-def get_produtos_nfe() -> Response:
-    data = request.get_json()
-    return make_response(jsonify({"items":"teste"})), 201
-
-
-@consulta_bp.route('/api/v2/companies/nfe/cartacorrecao',methods=['GET','POST'])
-def carta_correcao_nfe() -> Response:
-    data = request.get_json()
-    return make_response(jsonify({"correcao":"teste"})), 201
-    
-=======
-        abort(400)
->>>>>>> 5d3397dfbdb23ac89f5e0f807dc77c49e577763f

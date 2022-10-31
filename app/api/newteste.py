@@ -27,14 +27,10 @@ from ..controllers.controllers_hausz_mapa import executa_select
 cadastronota_bp = Blueprint('teste', __name__)
 
 
-
 def key_func(k):
     
     return k['CodigoPedido']
     
-
-
-
 load_dotenv()
 
 API_KEY_EMISSAO = os.getenv('API_KEY_EMISSAO')

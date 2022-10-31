@@ -115,27 +115,15 @@ def cadastra_nota_teste() -> Any:
         data = request.get_json()
         ref_pedido = data['CodigoPedido']
       
-        query = (text(""" SELECT DISTINCT notas.CodigoPedido, notas.NumPedidoOmie
-            , NomeCliente,estd.Uf,estd.Nome
-            ,notas.NumeroNF, cendereco.Endereco, cendereco.Numero
-            , cendereco.Bairro,cendereco.Cep,iflexy.CustoUnitario
-            ,iflexy.IdProduto,iflexy.SKU,iflexy.Quantidade, iflexy.QtdCaixa
-            FROM [HauszMapa].[Pedidos].[NotaFiscal] AS notas
-            JOIN [HauszMapa].[Pedidos].[EnderecoPedidos] as cendereco
-            ON cendereco.CodigoPedido = notas.CodigoPedido
-            JOIN [HauszMapa].[Pedidos].[ItensFlexy]  AS iflexy
-            ON iflexy.CodigoPedido = notas.CodigoPedido
-            JOIN [HauszMapa].[Pedidos].[PedidoFlexy] AS pflexy
-            ON pflexy.CodigoPedido = iflexy.CodigoPedido
-            JOIN [HauszMapa].[Cadastro].[Cidade] as ccidade
-            ON ccidade.IdCidade = cendereco.IdCidade
-            JOIN [HauszMapa].[Cadastro].[Estado] as estd
-            ON estd.IdEstado =ccidade.IdEstado
-            JOIN [HauszLogin].[Cadastro].[Cliente] AS client
-            ON client.IdCliente = pflexy.IdCliente
-            WHERE notas.CodigoPedido = ({})""".format(ref_pedido)))
-        teste = conn.execute(query).all()
-        query_dicts = [{key: value for (key, value) in row.items()} for row in teste]
+        try:
+            with db.engine.begin() as conn:
+                exec = (text(
+                    """EXEC ProdutosTax @codigopedido = {}""".format(int(ref_pedido))))
+                call_procedure_produto_tax = conn.execute(exec)
+        except:
+            print('erro')
+        
+        query_dicts = [{key: value for (key, value) in row.items()} for row in call_procedure_produto_tax]
         jsons = next(chain(query_dicts))
         jsons_nf = next(ajuste_dict(jsons['NumeroNF'], jsons['CodigoPedido']))
         newjs = next(executa_select(pedido = jsons['CodigoPedido']))
