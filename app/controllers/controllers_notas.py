@@ -107,7 +107,7 @@ def list_all_empresas(f) -> Any:
 
 
 def consulta_all_notas():
-    url ='https://api.nfse.io/v2/companies/acd0c1c8f5a1486592c6ed80d94e2bb7/productinvoices?environment=test&apikey=t0StUhoH4JiSN72ehwrhq3nQ27gRDTSJGt2W98rDXilRTwhNoJAiGtM9WUcl9MscjjW'
+    url =f'https://api.nfse.io/v2/companies/acd0c1c8f5a1486592c6ed80d94e2bb7/productinvoices?environment=test&apikey=t0StUhoH4JiSN72ehwrhq3nQ27gRDTSJGt2W98rDXilRTwhNoJAiGtM9WUcl9MscjjW'
 
     payload = []
     headers = []

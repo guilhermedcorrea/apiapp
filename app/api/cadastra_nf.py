@@ -19,7 +19,7 @@ from urllib.parse import urlencode
 from typing import Generator, Any
 from collections import defaultdict, ChainMap
 from operator import itemgetter
-from ..controllers.controllers_hausz_mapa import executa_select
+
 
 cadastronota_bp = Blueprint('teste', __name__)
 
@@ -33,24 +33,6 @@ load_dotenv()
 API_KEY_EMISSAO = os.getenv('API_KEY_EMISSAO')
 COMPANY_ID_EMISSAO = os.getenv('COMPANY_ID_EMISSAO')
 
-
-def cadastrar_nfe(*args, **kwargs) -> int:
-    url = "https://api.nfse.io/v2/companies/acd0c1c8f5a1486592c6ed80d94e2bb7/productinvoices/"
-
-    payload = json.dumps({"buyer": {"name": f"{kwargs.get('name_cliente')}","tradeName": "Comprador Nome Comercial",
-        "address": {"city": {"code": "1504018","name": f"{kwargs.get('name_city')}"},"state": "SP","district": "distrito",
-        "street": f"{kwargs.get('street')}","postalCode": f"{kwargs.get('postalCode')}","number": f"{kwargs.get('postalCode')}",
-        "country": "BRA"},"federalTaxNumber": 99999999999999
-    },"items": kwargs.get('items')})
-    headers = {
-    'Authorization': 't0StUhoH4JiSN72ehwrhq3nQ27gRDTSJGt2W98rDXilRTwhNoJAiGtM9WUcl9MscjjW',
-    'Content-Type': 'application/json'
-    }
-
-    response = requests.request("POST", url, headers=headers, data=payload)
-
-    response.status_code
-    return response.status_code
 
 def get_nota_saida_omie(idnota) -> Generator[Any, None, None]:
 
@@ -107,28 +89,19 @@ def cadastra_nota_teste() -> Any:
     with db.engine.connect() as conn:
         data = request.get_json()
         ref_pedido = data['CodigoPedido']
-      
-        query = (text(""" SELECT DISTINCT notas.CodigoPedido, notas.NumPedidoOmie
-            , NomeCliente,estd.Uf,estd.Nome
-            ,notas.NumeroNF, cendereco.Endereco, cendereco.Numero
-            , cendereco.Bairro,cendereco.Cep,iflexy.CustoUnitario
-            ,iflexy.IdProduto,iflexy.SKU,iflexy.Quantidade, iflexy.QtdCaixa
-            FROM [HauszMapa].[Pedidos].[NotaFiscal] AS notas
-            JOIN [HauszMapa].[Pedidos].[EnderecoPedidos] as cendereco
-            ON cendereco.CodigoPedido = notas.CodigoPedido
-            JOIN [HauszMapa].[Pedidos].[ItensFlexy]  AS iflexy
-            ON iflexy.CodigoPedido = notas.CodigoPedido
-            JOIN [HauszMapa].[Pedidos].[PedidoFlexy] AS pflexy
-            ON pflexy.CodigoPedido = iflexy.CodigoPedido
-            JOIN [HauszMapa].[Cadastro].[Cidade] as ccidade
-            ON ccidade.IdCidade = cendereco.IdCidade
-            JOIN [HauszMapa].[Cadastro].[Estado] as estd
-            ON estd.IdEstado =ccidade.IdEstado
-            JOIN [HauszLogin].[Cadastro].[Cliente] AS client
-            ON client.IdCliente = pflexy.IdCliente
-            WHERE notas.CodigoPedido = ({})""".format(ref_pedido)))
-        teste = conn.execute(query).all()
-        query_dicts = [{key: value for (key, value) in row.items()} for row in teste]
+
+        with db.engine.begin() as conn:
+
+        try:
+            exec = (text(
+                    """ProdutosTax @codigopedido = {}""".format(ref_pedido)))
+            exec_produtos = conn.execute(exec)
+
+        except:
+
+            print('erro')
+
+        query_dicts = [{key: value for (key, value) in row.items()} for row in exec_produtos]
         jsons = next(chain(query_dicts))
         jsons_nf = next(ajuste_dict(jsons['NumeroNF'], jsons['CodigoPedido']))
         newjs = next(executa_select(pedido = jsons['CodigoPedido']))
