@@ -32,16 +32,16 @@ UPLOADFOLDER = join_path = os.path.join(
 TEMPLATE_FOLDER = os.path.abspath(os.path.dirname(__file__)) 
 
 paramsdev = urllib.parse.quote_plus("DRIVER={ODBC Driver 17 for SQL Server};"
-                                 "SERVER=w2019.hausz.com.br;"
-                                 "DATABASE=HauszMapaDev2;"
-                                 "UID=Aplicacao.Guilherme;"
-                                 "PWD=4PL1C4ÇAO_3STOQUF202#")
+                                 "SERVER=f"{server};"
+                                 "DATABASE=f"{database}"
+                                 "UID=f"{usuario}"
+                                 "PWD=f"{password}")
 
 params = urllib.parse.quote_plus("DRIVER={ODBC Driver 17 for SQL Server};"
-                                 "SERVER=w2019.hausz.com.br;"
-                                 "DATABASE=HauszMapa;"
-                                 "UID=Aplicacao.Guilherme;"
-                                 "PWD=4PL1C4ÇAO_3STOQUF202#")
+                                  "SERVER=f"{server};"
+                                 "DATABASE=f"{database}"
+                                 "UID=f"{usuario}"
+                                 "PWD=f"{password}")
 
 SECRET_KEY = '5791628bb0b13ce0c676dfde280ba245'
 
