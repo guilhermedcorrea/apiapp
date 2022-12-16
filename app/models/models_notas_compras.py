@@ -26,6 +26,7 @@ class PedidoCompraNotaEntrada(db.Model):
     IdStatusItem = db.Column(db.Integer)
     EnviadoWMS = db.Column(db.Integer)
     
+   
 class PedidoCompraShowroom(db.Model):
     __tablename__ = "PedidoCompra"
     __table_args__ = {"schema": "ShowRoom"}
